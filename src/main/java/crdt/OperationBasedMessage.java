@@ -1,7 +1,5 @@
 package crdt;
 
-import crdt.simulator.TraceOperation;
-
 /**
  *
  * @author Stephane Martin <stephane.martin@loria.fr>

@@ -1,6 +1,5 @@
 package crdt;
 
-import crdt.simulator.TraceOperation;
 import java.io.Serializable;
 import java.util.LinkedList;
 

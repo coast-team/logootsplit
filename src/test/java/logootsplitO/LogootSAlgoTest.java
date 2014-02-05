@@ -1,6 +1,5 @@
 package logootsplitO;
 
-import crdt.CRDT;
 import crdt.CRDTMessage;
 import crdt.OperationBasedOneMessage;
 //import crdt.simulator.CausalSimulator;
@@ -8,12 +7,9 @@ import crdt.OperationBasedOneMessage;
 //import crdt.simulator.random.RandomTrace;
 //import crdt.simulator.random.StandardSeqOpProfile;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 import crdt.SequenceOperation;
-import factories.LogootSplitOFactory;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;

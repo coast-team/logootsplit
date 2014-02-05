@@ -13,7 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 import crdt.MergeAlgorithm;
 import crdt.SequenceOperation;
-import factories.LogootSplitOFactory;
 import logootsplitO.LogootSRopes.RopesNodes;
 import org.junit.Test;
 import static org.junit.Assert.*;

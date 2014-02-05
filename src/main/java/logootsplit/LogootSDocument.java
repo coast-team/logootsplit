@@ -3,8 +3,8 @@ package logootsplit;
 import crdt.Operation;
 import java.util.ArrayList;
 import java.util.List;
-import jbenchmarker.core.Document;
-import jbenchmarker.core.SequenceOperation;
+import crdt.Document;
+import crdt.SequenceOperation;
 
 public class LogootSDocument<T> implements Document {
 

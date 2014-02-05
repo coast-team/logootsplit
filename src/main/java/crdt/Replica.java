@@ -1,7 +1,5 @@
 package crdt;
 
-import jbenchmarker.core.LocalOperation;
-
 /**
  * A replica.
  * @author urso

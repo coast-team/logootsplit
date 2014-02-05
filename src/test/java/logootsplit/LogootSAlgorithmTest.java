@@ -1,9 +1,9 @@
 package logootsplit;
 
 import crdt.CRDTMessage;
-import jbenchmarker.core.MergeAlgorithm;
-import jbenchmarker.core.SequenceOperation;
-import jbenchmarker.factories.LogootSFactory;
+import crdt.MergeAlgorithm;
+import crdt.SequenceOperation;
+import factories.LogootSFactory;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;

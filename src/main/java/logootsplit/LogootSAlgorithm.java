@@ -1,12 +1,12 @@
 package logootsplit;
 
 import crdt.CRDT;
-import crdt.simulator.IncorrectTraceException;
+import crdt.IncorrectTraceException;
 import java.util.ArrayList;
 import java.util.List;
-import jbenchmarker.core.MergeAlgorithm;
+import crdt.MergeAlgorithm;
 import crdt.Operation;
-import jbenchmarker.core.SequenceOperation;
+import crdt.SequenceOperation;
 
 public class LogootSAlgorithm<T> extends MergeAlgorithm{
     

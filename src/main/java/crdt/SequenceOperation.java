@@ -1,4 +1,4 @@
-package jbenchmarker.core;
+package crdt;
 
 import crdt.CRDT;
 import java.io.Serializable;

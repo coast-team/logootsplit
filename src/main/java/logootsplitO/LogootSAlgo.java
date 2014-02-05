@@ -2,12 +2,12 @@ package logootsplitO;
 
 import crdt.CRDT;
 import crdt.Operation;
-import crdt.simulator.IncorrectTraceException;
+import crdt.IncorrectTraceException;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
-import jbenchmarker.core.MergeAlgorithm;
-import jbenchmarker.core.SequenceOperation;
+import crdt.MergeAlgorithm;
+import crdt.SequenceOperation;
 
 /**
  *

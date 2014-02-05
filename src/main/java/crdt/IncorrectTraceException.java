@@ -1,4 +1,4 @@
-package crdt.simulator;
+package crdt;
 
 /**
  *

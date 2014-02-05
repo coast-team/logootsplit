@@ -1,7 +1,7 @@
-package jbenchmarker.factories;
+package factories;
 
-import jbenchmarker.core.MergeAlgorithm;
-import jbenchmarker.core.ReplicaFactory;
+import crdt.MergeAlgorithm;
+import crdt.ReplicaFactory;
 import logootsplitO.LogootSAlgo;
 import logootsplitO.LogootSDocumentD;
 import logootsplitO.LogootSRopes;

@@ -1,7 +1,7 @@
 package logootsplitO;
 
 import java.util.List;
-import jbenchmarker.core.Document;
+import crdt.Document;
 
 /**
  *

@@ -1,4 +1,4 @@
-package jbenchmarker.factories;
+package factories;
 
 import crdt.CRDT;
 import crdt.Factory;

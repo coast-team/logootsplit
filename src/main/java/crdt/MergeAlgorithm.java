@@ -1,14 +1,14 @@
-package jbenchmarker.core;
+package crdt;
 
 import crdt.CRDT;
 import crdt.CRDTMessage;
 import crdt.Operation;
 import crdt.OperationBasedOneMessage;
-import crdt.simulator.IncorrectTraceException;
+import crdt.IncorrectTraceException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import jbenchmarker.core.SequenceOperation.OpType;
+import crdt.SequenceOperation.OpType;
 
 /**
  * Squeleton of mergeAlgorithm

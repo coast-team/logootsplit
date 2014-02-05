@@ -1,4 +1,3 @@
- */
 package logootsplitO;
 
 import java.util.Iterator;

@@ -6,3 +6,4 @@
 .Trashes
 ._*
 *.class
+/target/

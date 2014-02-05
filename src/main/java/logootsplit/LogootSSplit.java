@@ -3,7 +3,6 @@ package logootsplit;
 import crdt.Operation;
 import java.util.ArrayList;
 import java.util.List;
-import jbenchmarker.core.SequenceOperation;
 
 public class LogootSSplit implements LogootSOperation{
     

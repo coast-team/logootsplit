@@ -6,7 +6,6 @@ import crdt.simulator.IncorrectTraceException;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
-import jbenchmarker.core.Document;
 import jbenchmarker.core.MergeAlgorithm;
 import jbenchmarker.core.SequenceOperation;
 

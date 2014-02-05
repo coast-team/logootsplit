@@ -2,7 +2,6 @@ package crdt;
 
 import java.io.Serializable;
 import java.util.Observable;
-import jbenchmarker.core.LocalOperation;
 
 /**
  * A CRDT is a factory. create() returns a new CRDT with the same behavior.

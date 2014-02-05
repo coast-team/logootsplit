@@ -1,6 +1,9 @@
 package jbenchmarker.core;
 
-import crdt.*;
+import crdt.CRDT;
+import crdt.CRDTMessage;
+import crdt.Operation;
+import crdt.OperationBasedOneMessage;
 import crdt.simulator.IncorrectTraceException;
 import java.io.Serializable;
 import java.util.ArrayList;

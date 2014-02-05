@@ -1,7 +1,6 @@
 package logootsplit;
 
 import crdt.CRDT;
-import crdt.Operation;
 import crdt.simulator.IncorrectTraceException;
 import java.util.ArrayList;
 import java.util.List;

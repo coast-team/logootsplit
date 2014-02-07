@@ -1,5 +1,6 @@
 package logootsplitO;
 
+import bridge.TextOperation;
 import java.util.List;
 
 /**
@@ -24,8 +25,8 @@ public class LogootSOpAdd extends LogootSOp{
    
 
     @Override
-    public void apply(LogootSDoc doc) {
-        doc.addBlock(id, l);
+    public List<TextOperation> apply(LogootSDoc doc) {
+        return doc.addBlock(id, l);
     }
 
     @Override

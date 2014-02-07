@@ -1,5 +1,6 @@
 package logootsplitO;
 
+import bridge.TextOperation;
 import crdt.Operation;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -187,7 +188,7 @@ public class LogootSDocumentD implements LogootSDoc, Serializable {
     }
 
     @Override
-    public void addBlock(Identifier id, List l) {
+    public List<TextOperation> addBlock(Identifier id, List l) {
         LogootSBlockLight block = mapBaseToBlock.get(id.base);
         IdentifierInterval idi = new IdentifierInterval(id.base, id.last, id.last + l.size() - 1);
         if (block == null) {
@@ -197,6 +198,7 @@ public class LogootSDocumentD implements LogootSDoc, Serializable {
             block.addBlock(id.last, l);
         }
         addBlock(block, id.last, l);
+        return null;//only for compilation
     }
 
     public void delBlock(LogootSBlock block, int begin, int end) {
@@ -249,11 +251,12 @@ public class LogootSDocumentD implements LogootSDoc, Serializable {
     }
 
     @Override
-    public void delBlock(IdentifierInterval id) {
+    public List<TextOperation> delBlock(IdentifierInterval id) {
         LogootSBlock block = mapBaseToBlock.get(id.base);
         if (block != null) {
             delBlock(block, id.begin, id.end);
         }
+        return null;//only for compilation
     }
 
     @Override

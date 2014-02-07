@@ -1,5 +1,7 @@
 package logootsplitO;
 
+import bridge.TextOperation;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,10 +23,12 @@ public class LogootSOpDel extends LogootSOp {
     }
 
     @Override
-    public void apply(LogootSDoc doc) {
+    public List<TextOperation> apply(LogootSDoc doc) {
+        List l = new ArrayList<TextOperation>();
         for (IdentifierInterval id : lid) {
-            doc.delBlock(id);
+            l.addAll(doc.delBlock(id));
         }
+        return l;
     }
 
     @Override

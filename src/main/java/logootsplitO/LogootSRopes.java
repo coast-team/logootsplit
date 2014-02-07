@@ -766,7 +766,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
 //            System.out.println("\n\n" + root.viewRec());
 //            System.out.println(l2);
 //        }
-         return null;//only for compilation
+         return new ArrayList<TextOperation>();//only for compilation
     }
 
     boolean getNext(LinkedList<RopesNodes> path) {

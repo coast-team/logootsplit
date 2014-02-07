@@ -12,14 +12,11 @@ import java.util.Random;
  */
 public class IDFactory implements Serializable {
 
-    public static final boolean alea = false;
-    static Random rnd = new Random();
+    private static Random rnd = new Random();
 
-    static public List<Integer> createBetweenPosition(Identifier id1, Identifier id2, int replicaNumber, int clock) {
-        Iterator<Integer> s1;
-        Iterator<Integer> s2;
-        s1 = new IDFactory.infinitString((int) (Integer.MIN_VALUE + 1), id1 != null ? id1.iterator() : null);
-        s2 = new IDFactory.infinitString((int) (Integer.MAX_VALUE), id2 != null ? id2.iterator() : null);
+    public static List<Integer> createBetweenPosition(Identifier id1, Identifier id2, int replicaNumber, int clock) {
+        Iterator<Integer> s1 = new IDFactory.InfiniteString((int) (Integer.MIN_VALUE + 1), id1 != null ? id1.iterator() : null);
+        Iterator<Integer> s2 = new IDFactory.InfiniteString((int) (Integer.MAX_VALUE), id2 != null ? id2.iterator() : null);
         LinkedList<Integer> sb = new LinkedList();
 
         do {
@@ -27,33 +24,27 @@ public class IDFactory implements Serializable {
             long b2 = s2.next();
             if (b2 - b1 > 2) {
                 if (replicaNumber <= b1 || replicaNumber >= b2) {
-
                     int r = ((int) ((rnd.nextDouble() * (b2 - b1 - 2)) + b1)) + 1;
-
-                    //sb.addLast(new Integer((int) ((b1 + b2) / (long) 2)));
                     sb.addLast(r);
                 }
                 break;
             } else {
                 sb.addLast((int) b1);
             }
-        }while(true);
+        } while (true);
 
-        // sb.addLast(Integer.MIN_VALUE);
-        //sb.addAll(Integer.toHexString(id.getReplicaNumber()).getBytes()); 
         sb.add(replicaNumber);
-        // sb.addLast(Integer.MIN_VALUE);
         sb.add(clock);
 
         return sb;
     }
 
-    static class infinitString implements Iterator<Integer> {
+    private static class InfiniteString implements Iterator<Integer> {
 
-        Iterator<Integer> it;
-        int ch;
+        private Iterator<Integer> it;
+        private int ch;
 
-        public infinitString(int ch, Iterator<Integer> it) {
+        public InfiniteString(int ch, Iterator<Integer> it) {
             this.ch = ch;
             this.it = it;
         }

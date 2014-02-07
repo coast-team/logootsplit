@@ -1,10 +1,5 @@
 package crdt;
 
-import crdt.CRDT;
-import crdt.CRDTMessage;
-import crdt.Operation;
-import crdt.OperationBasedOneMessage;
-import crdt.IncorrectTraceException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,39 +12,26 @@ import crdt.SequenceOperation.OpType;
  */
 public abstract class MergeAlgorithm extends CRDT<String> implements Serializable {
 
-    private static final boolean DEBUG = false;
-    // Supported Document
-    final private Document doc;
-    final private List<String> states = new ArrayList<String>(1);
-
-    /*  private void applyOneRemote(CommutativeMessage mess){
-        
-     }*/
-    /*
-     * Constructor
-     */
+    private final Document doc;
+    
     /**
      *
      * @param doc Document of this merge algorithm
      * @param siteId SiteID or replicat number
      */
     public MergeAlgorithm(Document doc, int siteId) {
-        this.doc = doc;
-        this.setReplicaNumber(siteId);
-    }
-
-    public MergeAlgorithm(Document doc) {
+        super(siteId);
         this.doc = doc;
     }
 
     /**
-     * Integrate remote message from another replicas To be define by the
-     * concrete merge algorithm
+     * Integrate remote message from another replicas 
+     * To be define by the concrete merge algorithm
      *
      * @param message from another replicas
      * @throws IncorrectTraceException
      */
-    protected abstract void integrateRemote(crdt.Operation message) throws IncorrectTraceException;
+    protected abstract void integrateRemote(Operation message) throws IncorrectTraceException;
 
     /**
      *
@@ -57,12 +39,6 @@ public abstract class MergeAlgorithm extends CRDT<String> implements Serializabl
      */
     public Document getDoc() {
         return doc;
-    }
-
-    /**
-     * This the mergeAlgorithm return in initial state
-     */
-    public void reset() {
     }
 
     /**
@@ -88,12 +64,12 @@ public abstract class MergeAlgorithm extends CRDT<String> implements Serializabl
                 return null;
             default:
                 return null;
-                //throw new IncorrectTraceException("Unsupported operation : " + opt);
+            //throw new IncorrectTraceException("Unsupported operation : " + opt);
         }
     }
 
     /**
-     * Integreate local modification of the document. This function to stay
+     * Integrate local modification of the document. This function to stay
      * compatible with causal dispatcher localmodification is performed and a
      * sequence message is transformed to CRDTMessage.
      *
@@ -120,17 +96,15 @@ public abstract class MergeAlgorithm extends CRDT<String> implements Serializabl
                 m = m.concat(new OperationBasedOneMessage(n));
             }
         }
-        if (DEBUG) {
-            states.add(doc.view());
-        }
+
         return m;
     }
 
-    final public CRDTMessage insert(int position, String content) throws Exception {
+    public final CRDTMessage insert(int position, String content) throws Exception {
         return applyLocal(SequenceOperation.insert(position, content));
     }
 
-    final public CRDTMessage remove(int position, int length) throws Exception {
+    public final CRDTMessage remove(int position, int length) throws Exception {
         return applyLocal(SequenceOperation.delete(position, length));
     }
 
@@ -146,16 +120,16 @@ public abstract class MergeAlgorithm extends CRDT<String> implements Serializabl
      if (DEBUG) states.add(doc.view());
      }*/
     @Override
-    public void applyOneRemote(CRDTMessage mess) {
+    public void applyOneRemote(CRDTMessage message) {
         try {
-            integrateRemote(CRDTMessage2SequenceMessage(mess));
+            integrateRemote(CRDTMessage2SequenceMessage(message));
         } catch (IncorrectTraceException ex) {
             throw new IllegalStateException(ex);
         }
     }
 
-    public static Operation CRDTMessage2SequenceMessage(CRDTMessage mess) {
-        return (Operation) ((OperationBasedOneMessage) mess).getOperation();
+    public static Operation CRDTMessage2SequenceMessage(CRDTMessage message) {
+        return (Operation) ((OperationBasedOneMessage) message).getOperation();
     }
 
     /**
@@ -177,30 +151,30 @@ public abstract class MergeAlgorithm extends CRDT<String> implements Serializabl
      * replicas
      * @throws IncorrectTraceException by default
      */
-    abstract protected List<? extends Operation> localInsert(SequenceOperation opt) throws IncorrectTraceException;
+    protected abstract  List<? extends Operation> localInsert(SequenceOperation opt) throws IncorrectTraceException;
 
-    abstract protected List<? extends Operation> localDelete(SequenceOperation opt) throws IncorrectTraceException;
-    
+    protected abstract List<? extends Operation> localDelete(SequenceOperation opt) throws IncorrectTraceException;
+
     /**
-     * Default behavior of update is to delete and insert
+     * Default behavior of update is to delete then insert
      */
-    protected List<? extends Operation> localUpdate(SequenceOperation opt) throws IncorrectTraceException{
-         return localReplace(opt);
+    protected List<? extends Operation> localUpdate(SequenceOperation opt) throws IncorrectTraceException {
+        return localReplace(opt);
     }
 
     /**
-     * Default behavior of move is to delele plus insert
+     * Default behavior of move is to delele then insert
      */
     protected List<? extends Operation> localMove(SequenceOperation opt) throws IncorrectTraceException {
-        SequenceOperation del = new SequenceOperation(OpType.delete, opt.getPosition(), opt.getContent().size(), null),
-                ins = new SequenceOperation(OpType.insert, opt.getDestination(), 0, opt.getContent());
+        SequenceOperation del = new SequenceOperation(OpType.delete, opt.getPosition(), opt.getContent().size(), null);
+        SequenceOperation ins = new SequenceOperation(OpType.insert, opt.getDestination(), 0, opt.getContent());
         List lop = localDelete(del);
         lop.addAll(localInsert(ins));
         return lop;
     }
 
     /**
-     * Default behavior of replace is to delele plus insert
+     * Default behavior of replace is to delete then insert
      */
     protected List<? extends Operation> localReplace(SequenceOperation opt) throws IncorrectTraceException {
         List lop = localDelete(opt);
@@ -209,13 +183,4 @@ public abstract class MergeAlgorithm extends CRDT<String> implements Serializabl
 
     }
 
-    /*protected List<Operation> localReplaceCorrecteId(SequenceOperation opt) throws IncorrectTraceException {
-        System.out.println("--- localReplaceCorrecteId ---");
-        List<Operation> lop = localInsert(opt);
-        int newPos = opt.getPosition()+opt.getContent().size();
-        opt.setPosition(newPos);
-        lop.addAll(localDelete(opt));
-        return lop;
-
-    }*/
 }

@@ -2,10 +2,6 @@ package logootsplitO;
 
 import crdt.CRDTMessage;
 import crdt.OperationBasedOneMessage;
-//import crdt.simulator.CausalSimulator;
-//import crdt.simulator.Trace;
-//import crdt.simulator.random.RandomTrace;
-//import crdt.simulator.random.StandardSeqOpProfile;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,11 +39,9 @@ public class LogootSAlgoTest {
     }
 
     static LogootSBlock[] getFromMap(HashMap<List<Integer>, LogootSBlock> map) {
-
         return map.values().toArray(new LogootSBlock[map.size()]);
-
     }
-
+   
     @Test
     public void adddel() throws Exception {
         CRDTMessage p = alg3.insert(0, "abcd");

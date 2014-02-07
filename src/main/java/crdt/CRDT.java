@@ -1,27 +1,18 @@
 package crdt;
 
 import java.io.Serializable;
-import java.util.Observable;
 
 /**
  * A CRDT is a factory. create() returns a new CRDT with the same behavior.
  *
  * @author urso
  */
-public abstract class CRDT<L> extends Observable implements Factory<CRDT<L>>, Serializable, Replica<L> {
+public abstract class CRDT<L> implements Serializable, Replica<L> {
 
     private int replicaNumber;
-    public int nbrCleanMerge, nbrRedo, nbrInsConcur, nbrInsDelConcur, nbrDelDelConcur;
-    public CRDT(int replicaNumber) {
-        nbrCleanMerge = 0;
-        nbrRedo=0;
-        nbrInsConcur=0;
-        nbrInsDelConcur=0;
-        nbrDelDelConcur=0;
-        this.replicaNumber = replicaNumber;
-    }
 
-    public CRDT() {
+    public CRDT(int replicaNumber) {
+        this.replicaNumber = replicaNumber;
     }
 
     @Override
@@ -35,14 +26,10 @@ public abstract class CRDT<L> extends Observable implements Factory<CRDT<L>>, Se
     }
 
     @Override
-    final public void applyRemote(CRDTMessage msg) {
-        msg.execute(this);
+    final public void applyRemote(CRDTMessage message) {
+        message.execute(this);
     }
 
-    abstract public void applyOneRemote(CRDTMessage op);
+    public abstract void applyOneRemote(CRDTMessage op);
 
-    @Deprecated
-    public Long lastExecTime() {
-        return 0L;
-    }
 }

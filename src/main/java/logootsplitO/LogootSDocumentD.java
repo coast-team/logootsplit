@@ -198,7 +198,7 @@ public class LogootSDocumentD implements LogootSDoc, Serializable {
             block.addBlock(id.last, l);
         }
         addBlock(block, id.last, l);
-        return null;//only for compilation
+        return new ArrayList<TextOperation>();//only for compilation
     }
 
     public void delBlock(LogootSBlock block, int begin, int end) {
@@ -256,7 +256,7 @@ public class LogootSDocumentD implements LogootSDoc, Serializable {
         if (block != null) {
             delBlock(block, id.begin, id.end);
         }
-        return null;//only for compilation
+        return new ArrayList<TextOperation>();//only for compilation
     }
 
     @Override

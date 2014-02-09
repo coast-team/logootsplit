@@ -2,17 +2,18 @@ package crdt;
 
 /**
  * A replica.
+ *
  * @author urso
  */
 public interface Replica<L> {
 
-    CRDTMessage applyLocal(LocalOperation op) throws Exception;
+    public CRDTMessage applyLocal(LocalOperation op) throws Exception;
 
-    void applyRemote(CRDTMessage msg);
+    public void applyRemote(CRDTMessage msg);
 
-    int getReplicaNumber();
+    public L lookup();
 
-    L lookup();
+    public int getReplicaNumber();
 
-    void setReplicaNumber(int replicaNumber);   
+    public void setReplicaNumber(int replicaNumber);
 }

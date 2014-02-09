@@ -1,5 +1,6 @@
 package logootsplitO;
 
+//FIXME: useless class?
 public class LIdentifierInterval{
     
     LIdentifier id;

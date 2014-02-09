@@ -1,8 +1,8 @@
 package logootsplitO;
 
-import bridge.TextDelete;
-import bridge.TextInsert;
-import bridge.TextOperation;
+import facade.TextDelete;
+import facade.TextInsert;
+import facade.TextOperation;
 import crdt.Operation;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,6 +10,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import logootsplitO.IDFactory;
+import logootsplitO.Identifier;
+import logootsplitO.IdentifierInterval;
+import logootsplitO.IteratorHelperIdentifier;
+import logootsplitO.LogootSBlockLight;
+import logootsplitO.LogootSDoc;
+import logootsplitO.LogootSOp;
+import logootsplitO.LogootSOpAdd;
+import logootsplitO.LogootSOpDel;
 
 /**
  *

@@ -8,7 +8,8 @@ import java.util.List;
  * @author Stephane Martin <stephane@stephanemartin.fr>
  */
 public class IdentifierInterval implements Serializable {
-    List <Integer> base;
+
+    List<Integer> base;
     int begin;
     int end;
 
@@ -22,12 +23,14 @@ public class IdentifierInterval implements Serializable {
         return base;
     }
 
-    public Identifier getBeginId(){
-        return new Identifier(base,begin);
+    public Identifier getBeginId() {
+        return new Identifier(base, begin);
     }
-    public Identifier getEndId(){
-        return new Identifier(base,end);
+
+    public Identifier getEndId() {
+        return new Identifier(base, end);
     }
+
     public int getBegin() {
         return begin;
     }
@@ -35,13 +38,15 @@ public class IdentifierInterval implements Serializable {
     public int getEnd() {
         return end;
     }
-    public Identifier getBaseId(){
+
+    public Identifier getBaseId() {
         return new Identifier(base);
     }
 
-    public Identifier getBaseId(Integer u){
-        return new Identifier(base,u);
+    public Identifier getBaseId(Integer u) {
+        return new Identifier(base, u);
     }
+
     public void setBegin(int begin) {
         this.begin = begin;
     }
@@ -49,7 +54,8 @@ public class IdentifierInterval implements Serializable {
     public void setEnd(int end) {
         this.end = end;
     }
-     public void addBegin(int begin) {
+
+    public void addBegin(int begin) {
         this.begin += begin;
     }
 
@@ -59,7 +65,7 @@ public class IdentifierInterval implements Serializable {
 
     @Override
     public String toString() {
-        return "IdentifiantInterval{" +  base + ",[" + begin + ".." + end + "]}";
+        return "IdentifiantInterval{" + base + ",[" + begin + ".." + end + "]}";
     }
-    
+
 }

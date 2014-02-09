@@ -31,40 +31,11 @@ public class Identifier implements Comparable, Iterable, Serializable {
     @Override
     public int compareTo(Object t) {
         if (t instanceof Identifier) {
-            return compareTo(this.iterator(), ((Identifier) t).iterator());
+            return Identifier.compareTo(this.iterator(), ((Identifier) t).iterator());
         }
-        throw new UnsupportedOperationException("Not supported yet, identifier is not a " + t.getClass().getName()); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet, identifier is not a " + t.getClass().getName());
     }
 
-    /**
-     * -1 this.last< t.i, 0 this.last=t.i 1, this.last > t.i
-     *
-     * @param last
-     * @param t
-     * @param i
-     * @return
-     */
-    /* public int compareTo(Integer u, Identifier t,Integer i){
-     Iterator <Integer> s1=new Iterator_a(this.base.iterator(),u);
-     Iterator <Integer> s2=new Iterator_a(t.base.iterator(),i);
-     return compareTo(s1,s2);
-     }
-     public int compareTo(Integer u,List<Integer> t,Integer i){
-     Iterator <Integer> s1=new Iterator_a(this.base.iterator(),u);
-     Iterator <Integer> s2=new Iterator_a(t.iterator(),i);
-     return compareTo(s1,s2);
-     }
-     public static int compareTo(List <Integer>l1,Integer u1,List <Integer> l2,Integer u2){
-     Iterator <Integer> s1=new Iterator_a(l1.iterator(),u1);
-     Iterator <Integer> s2=new Iterator_a(l2.iterator(),u2);
-     return compareTo(s1,s2);
-     }
-    
-     public int compareTo(Identifier t,Integer i){
-     Iterator <Integer> s1=this.base.iterator();
-     Iterator <Integer> s2=new Iterator_a(t.base.iterator(),i);
-     return compareTo(s1,s2);
-     }*/
     /**
      * compare S1 and S2
      *
@@ -72,7 +43,7 @@ public class Identifier implements Comparable, Iterable, Serializable {
      * @param s2
      * @return -1 if s1<s2 ; 0 if s1==s2 ; 1 if s1>s2
      */
-    public static int compareTo(Iterator<Integer> s1, Iterator<Integer> s2) {
+    private static int compareTo(Iterator<Integer> s1, Iterator<Integer> s2) {
         while (s1.hasNext() && s2.hasNext()) {
             int b1 = s1.next();
             int b2 = s2.next();
@@ -83,15 +54,15 @@ public class Identifier implements Comparable, Iterable, Serializable {
                 return 1;
             }
         }
-        /* S1 is longer than s2*/
+        /* s1 is longer than s2 */
         if (s1.hasNext()) {
             return 1;
         }
-        /* S2 is longer than s1*/
+        /* s2 is longer than s1 */
         if (s2.hasNext()) {
             return -1;
         }
-        // Both have same size
+        // Both identifiers have same size
         return 0;
     }
 
@@ -108,16 +79,17 @@ public class Identifier implements Comparable, Iterable, Serializable {
         return new Iterator_a(base.iterator(), this.last);
     }
 
-    static class Iterator_a implements Iterator {
+    private static class Iterator_a implements Iterator {
+
+        private Iterator it;
+        private Object more;
+        private Object nexte;
 
         public Iterator_a(Iterator it, Object more) {
             this.it = it;
             this.more = more;
             loadNext();
         }
-        Iterator it;
-        Object more;
-        Object nexte;
 
         private void loadNext() {
             if (it.hasNext()) {
@@ -185,7 +157,6 @@ public class Identifier implements Comparable, Iterable, Serializable {
         }
     }
 
-    
     int minOffsetAfterPrev(Identifier prev, int min) {
         Iterator<Integer> i = this.base.iterator();
         Iterator<Integer> i2 = prev.iterator();
@@ -202,6 +173,7 @@ public class Identifier implements Comparable, Iterable, Serializable {
         }
 
     }
+
     /**
      *
      *

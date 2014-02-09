@@ -1,6 +1,6 @@
 package logootsplitO;
 
-import bridge.TextOperation;
+import facade.TextOperation;
 import crdt.Operation;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,15 +8,23 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import logootsplitO.IDFactory;
+import logootsplitO.Identifier;
+import logootsplitO.IdentifierInterval;
+import logootsplitO.LogootSBlock;
+import logootsplitO.LogootSBlockLight;
+import logootsplitO.LogootSDoc;
+import logootsplitO.LogootSOpAdd;
+import logootsplitO.LogootSOpDel;
 
 /**
  *
  * @author Stephane Martin <stephane@stephanemartin.fr>
  */
-public class LogootSDocumentD implements LogootSDoc, Serializable {
+public class LogootSDocumentD<T> implements LogootSDoc<T>, Serializable {
 
     private int clock = 0;
-    private HashMap<List<Integer>, LogootSBlockLight> mapBaseToBlock = new HashMap<List<Integer>, LogootSBlockLight>(); //for test
+    private HashMap<List<Integer>, LogootSBlockLight<T>> mapBaseToBlock = new HashMap<List<Integer>, LogootSBlockLight<T>>(); //for test
     private ArrayList<LinkBlock> list = new ArrayList<LinkBlock>();//dichotomic ready
     private StringBuilder view = new StringBuilder();
     private int replicaNumber = 0;
@@ -353,22 +361,17 @@ public class LogootSDocumentD implements LogootSDoc, Serializable {
     }
 
     @Override
-    public LogootSDoc create() {
-        return new LogootSDocumentD();
+    public LogootSDoc<T> create() {
+        return new LogootSDocumentD<T>();
     }
 
-    /**
-     * For test
-     */
-    public ArrayList<LinkBlock> getList() {
+    // Internally used for tests
+    List<LinkBlock> getList() {
         return list;
     }
 
-    public StringBuilder getView() {
-        return view;
-    }
-
-    public HashMap<List<Integer>, LogootSBlockLight> getMapBaseToBlock() {
+    // Internally used for tests
+    HashMap<List<Integer>, LogootSBlockLight<T>> getMapBaseToBlock() {
         return mapBaseToBlock;
     }
 }

@@ -8,12 +8,11 @@ import java.util.Iterator;
  */
 public class IteratorHelperIdentifier {
 
-    int nextOffset;
-
-    boolean samebase = false;
-    IdentifierInterval id1;
-    IdentifierInterval id2;
-    Result result = null;
+    private int nextOffset;
+    private boolean samebase = false;
+    private IdentifierInterval id1;
+    private IdentifierInterval id2;
+    private Result result = null;
 
     public static enum Result {
 
@@ -25,10 +24,10 @@ public class IteratorHelperIdentifier {
         this.id2 = id2;
     }
 
-   private Result compareBase() {
+    private Result compareBase() {
         Iterator<Integer> b1 = id1.base.iterator();
         Iterator<Integer> b2 = id2.base.iterator();
-        
+
         while (b1.hasNext() && b2.hasNext()) {
             int i1 = b1.next();
             int i2 = b2.next();
@@ -38,25 +37,25 @@ public class IteratorHelperIdentifier {
                 return Result.B1BeforeB2;
             }
         }
-        if (b1.hasNext()) {//b2 is shorter than b1
-            this.nextOffset=b1.next();
-            if(this.nextOffset<id2.begin){
+        if (b1.hasNext()) { //b2 is shorter than b1
+            this.nextOffset = b1.next();
+            if (this.nextOffset < id2.begin) {
                 return Result.B1BeforeB2;
-            }else if(this.nextOffset>=id2.end){
+            } else if (this.nextOffset >= id2.end) {
                 return Result.B1AfterB2;
-            }else {
+            } else {
                 return Result.B1InsideB2;
             }
-        } else if (b2.hasNext()) {//b1 is shorter than b2
-             this.nextOffset=b2.next();
-            if(this.nextOffset<id1.begin){
+        } else if (b2.hasNext()) { //b1 is shorter than b2
+            this.nextOffset = b2.next();
+            if (this.nextOffset < id1.begin) {
                 return Result.B1AfterB2;
-            }else if(this.nextOffset>=id1.end){
+            } else if (this.nextOffset >= id1.end) {
                 return Result.B1BeforeB2;
-            }else {
+            } else {
                 return Result.B2insideB1;
             }
-        } else { // they have same size
+        } else { // both bases have the same size
             if (id1.end + 1 == id2.begin) {
                 return Result.B1concatB2;
             } else if (id1.begin == id2.end + 1) {
@@ -69,12 +68,14 @@ public class IteratorHelperIdentifier {
         }
 
     }
+
     public Result computeResults() {
         if (result == null) {
             result = compareBase();
         }
         return result;
     }
+
     public int getNextOffset() {
         return nextOffset;
     }

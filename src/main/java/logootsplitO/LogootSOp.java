@@ -1,6 +1,6 @@
 package logootsplitO;
 
-import bridge.TextOperation;
+import facade.TextOperation;
 import crdt.Operation;
 import java.io.Serializable;
 import java.util.List;
@@ -9,11 +9,10 @@ import java.util.List;
  *
  * @author Stephane Martin <stephane@stephanemartin.fr>
  */
-public abstract class LogootSOp  implements  Operation, Serializable{
+public abstract class LogootSOp<T>  implements Operation, Serializable{
     
-
   @Override
-  abstract public LogootSOp clone();
+  abstract public LogootSOp<T> clone();
      
-  abstract public List<TextOperation> apply(LogootSDoc doc);
+  abstract public List<TextOperation> apply(LogootSDoc<T> doc);
 }

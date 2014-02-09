@@ -13,10 +13,11 @@ import crdt.SequenceOperation;
  *
  * @author Stephane Martin <stephane@stephanemartin.fr>
  */
-public class LogootSAlgo extends MergeAlgorithm implements Serializable {
+public class LogootSAlgo<T> extends MergeAlgorithm implements Serializable {
 
-    public LogootSAlgo(LogootSDoc doc, int siteId) {
+    public LogootSAlgo(LogootSDoc<T> doc, int siteId) {
         super(doc, siteId);
+        this.getLDoc().setReplicaNumber(siteId);
     }
 
     @Override
@@ -25,8 +26,8 @@ public class LogootSAlgo extends MergeAlgorithm implements Serializable {
         this.getLDoc().setReplicaNumber(replicaNumber);
     }
 
-    LogootSDoc getLDoc() {
-        return (LogootSDoc) this.getDoc();
+    LogootSDoc<T> getLDoc() {
+        return (LogootSDoc<T>) this.getDoc();
     }
 
     @Override

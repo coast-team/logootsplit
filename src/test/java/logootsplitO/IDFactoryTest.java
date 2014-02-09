@@ -11,9 +11,6 @@ import static org.junit.Assert.*;
  */
 public class IDFactoryTest {
 
-    public IDFactoryTest() {
-    }
-
     @Test
     public void testSomeMethod() {
         Identifier id1 = new Identifier(Arrays.asList(0, 1, 0), 1);

@@ -1,14 +1,13 @@
 package logootsplitO;
 
-import crdt.CRDTMessage;
-import crdt.OperationBasedOneMessage;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import crdt.SequenceOperation;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import crdt.CRDTMessage;
+import crdt.OperationBasedOneMessage;
+import java.util.HashMap;
+import java.util.List;
+import crdt.SequenceOperation;
 
 /**
  *
@@ -16,13 +15,6 @@ import org.junit.Before;
  */
 public class LogootSAlgoTest {
 
-    static List<Character> getListFromString(String str) {
-        List<Character> l = new LinkedList();
-        for (int i = 0; i < str.length(); i++) {
-            l.add(str.charAt(i));
-        }
-        return l;
-    }
     LogootSAlgo alg1;
     LogootSAlgo alg2;
     LogootSAlgo alg3;
@@ -32,10 +24,6 @@ public class LogootSAlgoTest {
         alg1 = new LogootSAlgo(new LogootSDocumentD(), 1);
         alg2 = new LogootSAlgo(new LogootSDocumentD(), 50);
         alg3 = new LogootSAlgo(new LogootSDocumentD(), 75);
-    }
-
-    @Test
-    public void testSomeMethod() {
     }
 
     static LogootSBlock[] getFromMap(HashMap<List<Integer>, LogootSBlock> map) {

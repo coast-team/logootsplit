@@ -10,9 +10,6 @@ import static org.junit.Assert.*;
  */
 public class IdentifierTest {
     
-    public IdentifierTest() {
-    }
-
     @Test
     public void testSomeMethod() {
         Identifier id1=new Identifier(Arrays.asList(0,0,7,0),0);

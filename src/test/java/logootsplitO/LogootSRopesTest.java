@@ -25,246 +25,229 @@ import org.junit.Ignore;
  */
 public class LogootSRopesTest {
 
-    static List<Character> getListFromString(String str) {
-        List<Character> l = new LinkedList();
-        for (int i = 0; i < str.length(); i++) {
-            l.add(str.charAt(i));
-        }
-        return l;
-    }
-    LogootSAlgo alg1;
-    LogootSAlgo alg2;
-    LogootSAlgo alg3;
-    LogootSAlgo alg4;
+    private LogootSAlgo<Character> alg1;
+    private LogootSAlgo<Character> alg2;
+    private LogootSAlgo<Character> alg3;
+    private LogootSAlgo<Character> alg4;
 
     @Before
     public void setup() {
-        alg1 = new LogootSAlgo(new LogootSRopes(), 1);
-        alg2 = new LogootSAlgo(new LogootSRopes(), 50);
-        alg3 = new LogootSAlgo(new LogootSRopes(), 75);
-        alg4 = new LogootSAlgo(new LogootSRopes(), 77);
-    }
-
-    public LogootSRopesTest() {
-    }
-
-    public static String convert(List r) {
-        StringBuilder str = new StringBuilder(r.size());
-        for (Object o : r) {
-            str.append(o);
-        }
-        return str.toString();
+        this.alg1 = new LogootSAlgo<Character>(new LogootSRopes<Character>(), 1);
+        this.alg2 = new LogootSAlgo<Character>(new LogootSRopes<Character>(), 50);
+        this.alg3 = new LogootSAlgo<Character>(new LogootSRopes<Character>(), 75);
+        this.alg4 = new LogootSAlgo<Character>(new LogootSRopes<Character>(), 77);
     }
 
     @Test
-    public void SimpleAddMergeCheck() throws Exception {
-        LinkedList<CRDTMessage> l = new LinkedList();
-        l.add(alg1.insert(0, "Hello"));
+    public void simpleAddMergeCheck() throws Exception {
+        LinkedList<CRDTMessage> messages = new LinkedList<CRDTMessage>();
+        messages.add(alg1.insert(0, "Hello"));
+        
         assertEquals("Hello", alg1.lookup());
-        l.add(alg1.insert(5, " world"));
-
+        
+        messages.add(alg1.insert(5, " world"));
+        
         assertEquals("Hello world", alg1.lookup());
-        LogootSRopes doc = (LogootSRopes) alg1.getDoc();
-        LogootSRopes.RopesNodes root = doc.root;
+        LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
+        LogootSRopes.RopesNodes<Character> root = doc.root;
         assertNull(root.getLeft());
         assertNull(root.getRight());
-        assertEquals("Hello world", convert(root.str));
+        assertEquals("Hello world", Utils.convertCharactersListToString(root.str));
         assertEquals(1, root.getHeighOfTree());
         assertEquals(11, root.getSizeNodeAndChildren());
 
-        l.add(alg1.insert(0, "---"));
+        messages.add(alg1.insert(0, "---"));
+        
         root = doc.root;
         assertNull(root.getLeft());
         assertNull(root.getRight());
-        assertEquals("---Hello world", convert(root.str));
+        assertEquals("---Hello world", Utils.convertCharactersListToString(root.str));
         assertEquals(1, root.getHeighOfTree());
         assertEquals(14, root.getSizeNodeAndChildren());
 
-
-
-        /**
-         * Apply to another sites.
-         *
-         */
-        alg2.applyRemote(l.pop());
+        // Apply to other sites
+        alg2.applyRemote(messages.pop());
+        
         assertEquals("Hello", alg2.lookup());
-        LogootSRopes doc2 = (LogootSRopes) alg2.getDoc();
+        LogootSRopes<Character> doc2 = (LogootSRopes<Character>) alg2.getDoc();
         root = doc2.root;
         assertEquals(1, root.getHeighOfTree());
         assertEquals(5, root.getSizeNodeAndChildren());
-        assertEquals("Hello", convert(root.str));
+        assertEquals("Hello", Utils.convertCharactersListToString(root.str));
         assertNull(root.getLeft());
         assertNull(root.getRight());
 
-        alg2.applyRemote(l.pop());
-
+        alg2.applyRemote(messages.pop());
+        
         assertEquals("Hello world", alg2.lookup());
-        doc2 = (LogootSRopes) alg2.getDoc();
+        doc2 = (LogootSRopes<Character>) alg2.getDoc();
         root = doc2.root;
         assertEquals(1, root.getHeighOfTree());
         assertEquals(11, root.getSizeNodeAndChildren());
-        assertEquals("Hello world", convert(root.str));
+        assertEquals("Hello world", Utils.convertCharactersListToString(root.str));
         assertNull(root.getLeft());
         assertNull(root.getRight());
 
-
-        alg2.applyRemote(l.pop());
+        alg2.applyRemote(messages.pop());
+        
         assertEquals("---Hello world", alg2.lookup());
-        doc2 = (LogootSRopes) alg2.getDoc();
+        doc2 = (LogootSRopes<Character>) alg2.getDoc();
         root = doc2.root;
         assertEquals(1, root.getHeighOfTree());
         assertEquals(14, root.getSizeNodeAndChildren());
-        assertEquals("---Hello world", convert(root.str));
+        assertEquals("---Hello world", Utils.convertCharactersListToString(root.str));
         assertNull(root.getLeft());
         assertNull(root.getRight());
-
     }
 
     @Test
     public void testTest() throws Exception {
-        LinkedList<CRDTMessage> l = new LinkedList();
-        l.add(alg3.insert(0, " world"));
+        LinkedList<CRDTMessage> messages = new LinkedList();
+        messages.add(alg3.insert(0, " world"));
 
-        alg1.applyRemote(l.get(0));
-        l.add(alg1.insert(0, "Hello"));
-
-        l.add(alg1.insert(11, "Every ones ?"));
-        LogootSRopes doc = (LogootSRopes) alg1.getDoc();
+        alg1.applyRemote(messages.get(0));
+        messages.add(alg1.insert(0, "Hello"));
+        messages.add(alg1.insert(11, "Every ones ?"));
+        
+        LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
         LinkedList<RopesNodes> lp = new LinkedList<RopesNodes>();
-        doc.searchFull(doc.root, ((LogootSOpAdd) MergeAlgorithm.CRDTMessage2SequenceMessage(l.getLast())).id, lp);
+        doc.searchFull(doc.root, ((LogootSOpAdd<Character>) MergeAlgorithm.CRDTMessage2SequenceMessage(messages.getLast())).id, lp);
         assertTrue(lp.size() > 0);
-        doc.searchFull(doc.root, ((LogootSOpAdd) MergeAlgorithm.CRDTMessage2SequenceMessage(l.getLast())).id, lp);
+        doc.searchFull(doc.root, ((LogootSOpAdd<Character>) MergeAlgorithm.CRDTMessage2SequenceMessage(messages.getLast())).id, lp);
         lp.clear();
         assertFalse(doc.searchFull(doc.root, new Identifier(Arrays.asList(0, 0, 0, 0, 0), 42), lp));
         assertEquals(lp.size(), 0);
     }
 
-    @Test//TODO : remake me !
-    public void SimpleAddCheck() throws Exception {
-        LinkedList<CRDTMessage> l = new LinkedList();
-        l.add(alg3.insert(0, " world"));
+    @Test
+    public void simpleAddCheck() throws Exception {
+        LinkedList<CRDTMessage> messages = new LinkedList();
+        messages.add(alg3.insert(0, " world"));
 
-        alg1.applyRemote(l.get(0));
-        l.add(alg1.insert(0, "Hello"));
+        alg1.applyRemote(messages.get(0));
+        messages.add(alg1.insert(0, "Hello"));
+        
         assertEquals("Hello world", alg1.lookup());
-        LogootSRopes doc = (LogootSRopes) alg1.getDoc();
+        LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
         LogootSRopes.RopesNodes root = doc.root;
         LogootSRopes.RopesNodes prev = root.getLeft();
-        assertEquals(" world", convert(root.str));
-        assertEquals("Hello", convert(prev.str));
-
+        assertEquals(" world", Utils.convertCharactersListToString(root.str));
+        assertEquals("Hello", Utils.convertCharactersListToString(prev.str));
         assertEquals(2, root.getHeighOfTree());
         assertEquals(1, prev.getHeighOfTree());
         assertEquals(11, root.getSizeNodeAndChildren());
         assertEquals(5, prev.getSizeNodeAndChildren());
         assertEquals(1, prev.getHeighOfTree());
-
         assertEquals(6, root.getSize());
         assertEquals(5, prev.getSize());
 
-        l.add(alg1.insert(11, "Every ones ?"));
+        messages.add(alg1.insert(11, "Every ones ?"));
+        
         root = doc.root;
         LogootSRopes.RopesNodes next = root.getRight();
         LogootSRopes.RopesNodes previous = root.getLeft();
-
         assertEquals(2, root.getHeighOfTree());
         assertEquals(1, next.getHeighOfTree());
         assertEquals(1, previous.getHeighOfTree());
         assertEquals(23, root.getSizeNodeAndChildren());
         assertEquals(12, next.getSizeNodeAndChildren());
         assertEquals(5, previous.getSizeNodeAndChildren());
-        assertEquals("Hello", convert(previous.str));
-        assertEquals(" world", convert(root.str));
-        assertEquals("Every ones ?", convert(next.str));
-        alg2.applyRemote(l.pollLast());
-
-        alg2.applyRemote(l.pollLast());
-        //System.out.println(((LogootSRopes) alg2.getLDoc()).root.toString());
-        alg2.applyRemote(l.pollLast());
-        root = ((LogootSRopes) alg2.getLDoc()).root;
+        assertEquals("Hello", Utils.convertCharactersListToString(previous.str));
+        assertEquals(" world", Utils.convertCharactersListToString(root.str));
+        assertEquals("Every ones ?", Utils.convertCharactersListToString(next.str));
+        
+        alg2.applyRemote(messages.pollLast());
+        alg2.applyRemote(messages.pollLast());
+        alg2.applyRemote(messages.pollLast());
+        
+        root = ((LogootSRopes<Character>) alg2.getLDoc()).root;
         next = root.getRight();
         previous = root.getLeft();
-
         assertEquals(2, root.getHeighOfTree());
         assertEquals(1, next.getHeighOfTree());
         assertEquals(1, previous.getHeighOfTree());
         assertEquals(23, root.getSizeNodeAndChildren());
         assertEquals(12, next.getSizeNodeAndChildren());
         assertEquals(5, previous.getSizeNodeAndChildren());
-        assertEquals("Hello", convert(previous.str));
-        assertEquals(" world", convert(root.str));
-        assertEquals("Every ones ?", convert(next.str));
+        assertEquals("Hello", Utils.convertCharactersListToString(previous.str));
+        assertEquals(" world", Utils.convertCharactersListToString(root.str));
+        assertEquals("Every ones ?", Utils.convertCharactersListToString(next.str));
     }
 
     @Test
-    public void adddel() throws Exception {
+    public void addDel() throws Exception {
         CRDTMessage p = alg3.insert(0, "abcd");
         alg2.applyRemote(p);
         alg1.applyRemote(p);
+        
         assertEquals("abcd", alg2.lookup());
+        
         CRDTMessage p2 = alg2.remove(0, 2);
         CRDTMessage p3 = alg2.remove(0, 2);
-
         alg1.applyRemote(p2);
+        
         assertEquals("cd", alg1.lookup());
+        
         alg1.applyRemote(p3);
+        
         assertEquals("", alg1.lookup());
 
-
         alg3.applyRemote(p3);
+        
         assertEquals("ab", alg3.lookup());
+        
         alg3.applyRemote(p2);
+        
         assertEquals("", alg3.lookup());
-
     }
 
     @Test
-    public void SimpleAddDelTest() throws Exception {
-
-
-
-
+    public void simpleAddDel() throws Exception {
         CRDTMessage op1 = alg1.insert(0, "Test1234");
+        
         assertEquals("Test1234", alg1.lookup());
         assertTrue(scoreChecks(alg1, alg2, alg3));
+        
         CRDTMessage op2 = alg1.insert(5, "haha");
+        
         assertEquals("Test1haha234", alg1.lookup());
-        assertEquals("[T, e, s, t, 1, 2, 3, 4]", ((LogootSOpAdd) MergeAlgorithm.CRDTMessage2SequenceMessage(op1)).l.toString());
-        assertEquals("[h, a, h, a]", ((LogootSOpAdd) MergeAlgorithm.CRDTMessage2SequenceMessage(op2)).l.toString());
+        assertEquals("[T, e, s, t, 1, 2, 3, 4]", ((LogootSOpAdd<Character>) MergeAlgorithm.CRDTMessage2SequenceMessage(op1)).l.toString());
+        assertEquals("[h, a, h, a]", ((LogootSOpAdd<Character>) MergeAlgorithm.CRDTMessage2SequenceMessage(op2)).l.toString());
         assertTrue(scoreChecks(alg1, alg2, alg3));
+        
         alg2.applyRemote(op2);
+        
         assertEquals("haha", alg2.lookup());
         assertTrue(scoreChecks(alg1, alg2, alg3));
+        
         alg2.applyRemote(op1);
+        
         assertEquals("Test1haha234", alg2.lookup());
         assertTrue(scoreChecks(alg1, alg2, alg3));
+        
         alg3.applyRemote(op1);
         alg3.applyRemote(op2);
+        
         assertEquals("Test1haha234", alg3.lookup());
         assertTrue(scoreChecks(alg1, alg2, alg3));
 
-        /**
-         * Del
-         */
+        // Del
         CRDTMessage op3 = alg3.remove(4, 6);
 
         assertEquals("Test34", alg3.lookup());
+
         alg2.applyRemote(op3);
+        
         assertEquals("Test34", alg2.lookup());
 
-        /**
-         * Make another del
-         */
+        // Another Del
         assertEquals("Test1haha234", alg1.lookup());
+        
         CRDTMessage op4 = alg1.remove(3, 4);
+        
         assertEquals("Tesha234", alg1.lookup());
 
-        //assertEquals(2,op4.lid.size());
-
-
-        /**
-         * integration of del
-         */
+        // integration of Del
         alg1.applyRemote(op3);
 
         assertEquals("Tes34", alg1.lookup());
@@ -273,37 +256,27 @@ public class LogootSRopesTest {
 
         assertEquals("Tes34", alg2.lookup());
 
-
         alg3.applyRemote(op4);
 
         assertEquals("Tes34", alg3.lookup());
+        
         CRDTMessage op5 = alg3.insert(2, "toto");
 
-        LinkedList l1 = browse(alg1);
-        LinkedList l2 = browse(alg2);
-        LinkedList l3 = browse(alg3);
-         assertTrue(scoreChecks(alg1, alg2, alg3));
-
+        assertTrue(scoreChecks(alg1, alg2, alg3));
 
         CRDTMessage op6 = alg2.insert(3, "jiji");
 
         alg1.applyRemote(op6);
         alg1.applyRemote(op5);
-
         alg2.applyRemote(op5);
         alg3.applyRemote(op6);
-        /*System.out.println(((LogootSRopes) alg1.getLDoc()).root.viewRec());
-         System.out.println(((LogootSRopes) alg2.getLDoc()).root.viewRec());
-         System.out.println(((LogootSRopes) alg3.getLDoc()).root.viewRec());*/
-        /*LinkedList l1=browse(alg1);
-         LinkedList l2=browse(alg2);
-         LinkedList l3=browse(alg3);*/
-        assert (scoreChecks(alg1, alg2, alg3));
+
+        assertTrue(scoreChecks(alg1, alg2, alg3));
         assertEquals(alg1.lookup(), alg2.lookup());
         assertEquals(alg2.lookup(), alg3.lookup());
-
     }
 
+    
     static LinkedList<RopesNodes> browse(LogootSAlgo alg) {
         RopesNodes node = ((LogootSRopes) alg.getLDoc()).root;
         LinkedList<RopesNodes> ret = new LinkedList<RopesNodes>();
@@ -327,7 +300,7 @@ public class LogootSRopesTest {
         return scoreCheckT(node, ret);
     }
 
-      static boolean scoreCheckT(RopesNodes node, LinkedList<RopesNodes> list) {
+    static boolean scoreCheckT(RopesNodes node, LinkedList<RopesNodes> list) {
         if (node == null) {
             return true;
         }
@@ -339,7 +312,7 @@ public class LogootSRopesTest {
 
         int nodeinsub = node.str.size() + node.getSizeNodeAndChildren(0) + node.getSizeNodeAndChildren(1);
         if (node.getSizeNodeAndChildren() != nodeinsub) {
-            System.err.println("error lenght : " + node.getSizeNodeAndChildren() + "<>" + nodeinsub + " " + list);
+            System.err.println("error length : " + node.getSizeNodeAndChildren() + "<>" + nodeinsub + " " + list);
             ret = false;
 
         }
@@ -349,12 +322,10 @@ public class LogootSRopesTest {
             ret = false;
         }
 
-
         int bal = node.balanceScore();
         if (Math.abs(bal) > 1) {
             System.err.println("Balance broken " + bal + ":" + node.getSubtreeHeigh(1) + " vs " + node.getSubtreeHeigh(0) + " " + list);
             ret = false;
-//            assertTrue("fuck",false);
         }
         list.removeLast();
         return ret;
@@ -363,9 +334,6 @@ public class LogootSRopesTest {
     static boolean scoreChecks(LogootSAlgo... a) {
         boolean ret = true;
         for (int i = 0; i < a.length; i++) {
-
-            /*System.err.println("\n\n==alg" + (i + 1) + "==\n");
-             System.out.println(((LogootSRopes) a[i].getLDoc()).root.viewRec());*/
             ret &= scoreCheck(a[i]);
         }
         return ret;
@@ -419,7 +387,6 @@ public class LogootSRopesTest {
         alg1.applyLocal(SequenceOperation.insert(7, "7"));
         assertEquals("ab2cdef7ghij", alg1.lookup());
 
-
         alg2.applyRemote(m1);
         assertEquals(content, alg2.lookup());
         CRDTMessage m2 = alg2.applyLocal(SequenceOperation.delete(1, 8));
@@ -458,12 +425,8 @@ public class LogootSRopesTest {
         alg2.applyRemote(op1);
         alg2.applyRemote(op3);
 
-        //System.out.println(((LogootSRopes)alg2.getLDoc()).root.viewRec());
         assertEquals("beforeTest1234la suite", alg2.lookup());
-        // System.out.println(alg1.lookup());
         assertEquals(1, ((LogootSRopes) alg1.getLDoc()).getMapBaseToBlock().size());
-
-
     }
 
     @Test
@@ -509,7 +472,6 @@ public class LogootSRopesTest {
         alg2.applyRemote(m3);
         alg2.applyRemote(m2);
         assertEquals("yoyototohikokohi", alg2.lookup());
-
     }
 
     @Test
@@ -530,14 +492,12 @@ public class LogootSRopesTest {
         alg2.applyRemote(m3);
         alg2.applyRemote(m2);
         assertEquals("yoyototohkokoihi", alg2.lookup());
-
     }
 
     void checkNoneNull(CRDT... algs) {
         for (CRDT crdt : algs) {
             checkNoneNull(((LogootSRopes) ((LogootSAlgo) crdt).getLDoc()).root);
         }
-
     }
 
     void checkNoneNull(RopesNodes node) {
@@ -549,52 +509,51 @@ public class LogootSRopesTest {
         checkNoneNull(node.getRight());
     }
 
+    /*TODO: check if we have to enable this test. Commented out because it requires too much classes from jbenchmarker
+     @Test
+     public void testBal() throws Exception {
+     Trace trace = new RandomTrace(4200, RandomTrace.FLAT, new SequenceOperationStupid(0.8, 0.5, 4, 5.0), 0.1, 10, 3.0, 13);
+     CausalSimulator cd = new CausalSimulator(new LogootSplitOFactory(LogootSplitOFactory.TypeDoc.Ropes));
+     cd.run(trace);
+     alg1 = (LogootSAlgo) cd.getReplicas().get(new Integer(1));
+     alg2 = (LogootSAlgo) cd.getReplicas().get(new Integer(2));
+     alg3 = (LogootSAlgo) cd.getReplicas().get(new Integer(3));
+     checkNoneNull(alg1, alg2, alg3);
+     assertTrue(scoreChecks(alg1, alg2, alg3));
+     }
+     */
+
+    /*TODO: check if we have to enable this test. Commented out because it requires too much classes from jbenchmarker
+     @Test
+     public void testGC() throws Exception {
+     Trace trace = new RandomTrace(4200, RandomTrace.FLAT, new StandardSeqOpProfile(0.8, 0.5, 4, 5.0), 0.1, 10, 3.0, 13);
+     CausalSimulator cd = new CausalSimulator(new LogootSplitOFactory(LogootSplitOFactory.TypeDoc.Ropes));
+     cd.run(trace);
+     alg1 = (LogootSAlgo) cd.getReplicas().get(new Integer(1));
+     alg2 = (LogootSAlgo) cd.getReplicas().get(new Integer(2));
+     alg3 = (LogootSAlgo) cd.getReplicas().get(new Integer(3));
+     checkNoneNull(alg1, alg2, alg3);
+     assertTrue(scoreChecks(alg1, alg2, alg3));
+     assertTrue("Doc is empty", alg1.getLDoc().viewLength() > 0);
+     CRDTMessage m1 = alg1.remove(0, alg1.getLDoc().viewLength());
+     alg2.applyRemote(m1);
+     alg3.applyRemote(m1);
+     //System.out.println(alg1.lookup());
+     assertEquals(0, alg1.getLDoc().viewLength());
+     assertEquals(0, alg2.getLDoc().viewLength());
+     assertEquals(0, alg3.getLDoc().viewLength());
+     assertEquals(0, ((LogootSRopes) alg1.getLDoc()).getMapBaseToBlock().size());
+     assertEquals(0, ((LogootSRopes) alg2.getLDoc()).getMapBaseToBlock().size());
+     assertEquals(0, ((LogootSRopes) alg3.getLDoc()).getMapBaseToBlock().size());
+     assertNull(((LogootSRopes) alg1.getLDoc()).root);
+     assertNull(((LogootSRopes) alg2.getLDoc()).root);
+     assertNull(((LogootSRopes) alg3.getLDoc()).root);
+     }
+     */
     
-    /*TODO: check if we have to enable this test. Commented out because it requires too much classes from jbenchmarker
-    @Test
-    public void testBal() throws Exception {
-        Trace trace = new RandomTrace(4200, RandomTrace.FLAT, new SequenceOperationStupid(0.8, 0.5, 4, 5.0), 0.1, 10, 3.0, 13);
-        CausalSimulator cd = new CausalSimulator(new LogootSplitOFactory(LogootSplitOFactory.TypeDoc.Ropes));
-        cd.run(trace);
-        alg1 = (LogootSAlgo) cd.getReplicas().get(new Integer(1));
-        alg2 = (LogootSAlgo) cd.getReplicas().get(new Integer(2));
-        alg3 = (LogootSAlgo) cd.getReplicas().get(new Integer(3));
-        checkNoneNull(alg1, alg2, alg3);
-        assertTrue(scoreChecks(alg1, alg2, alg3));
-    }
-    */
-
-    /*TODO: check if we have to enable this test. Commented out because it requires too much classes from jbenchmarker
-    @Test
-    public void testGC() throws Exception {
-        Trace trace = new RandomTrace(4200, RandomTrace.FLAT, new StandardSeqOpProfile(0.8, 0.5, 4, 5.0), 0.1, 10, 3.0, 13);
-        CausalSimulator cd = new CausalSimulator(new LogootSplitOFactory(LogootSplitOFactory.TypeDoc.Ropes));
-        cd.run(trace);
-        alg1 = (LogootSAlgo) cd.getReplicas().get(new Integer(1));
-        alg2 = (LogootSAlgo) cd.getReplicas().get(new Integer(2));
-        alg3 = (LogootSAlgo) cd.getReplicas().get(new Integer(3));
-        checkNoneNull(alg1, alg2, alg3);
-        assertTrue(scoreChecks(alg1, alg2, alg3));
-        assertTrue("Doc is empty", alg1.getLDoc().viewLength() > 0);
-        CRDTMessage m1 = alg1.remove(0, alg1.getLDoc().viewLength());
-        alg2.applyRemote(m1);
-        alg3.applyRemote(m1);
-        //System.out.println(alg1.lookup());
-        assertEquals(0, alg1.getLDoc().viewLength());
-        assertEquals(0, alg2.getLDoc().viewLength());
-        assertEquals(0, alg3.getLDoc().viewLength());
-        assertEquals(0, ((LogootSRopes) alg1.getLDoc()).getMapBaseToBlock().size());
-        assertEquals(0, ((LogootSRopes) alg2.getLDoc()).getMapBaseToBlock().size());
-        assertEquals(0, ((LogootSRopes) alg3.getLDoc()).getMapBaseToBlock().size());
-        assertNull(((LogootSRopes) alg1.getLDoc()).root);
-        assertNull(((LogootSRopes) alg2.getLDoc()).root);
-        assertNull(((LogootSRopes) alg3.getLDoc()).root);
-    }
-    */
-
     @Test
     public void simpleRotateTest() {
-        LogootSRopes doc = (LogootSRopes) alg1.getDoc();
+        LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
 
         LogootSRopes.RopesNodes T1 = new LogootSRopes.RopesNodes(Arrays.asList("T1"), 0, null);
         LogootSRopes.RopesNodes T2 = new LogootSRopes.RopesNodes(Arrays.asList("T2"), 0, null);
@@ -623,7 +582,7 @@ public class LogootSRopesTest {
 
     @Test
     public void simpleRotateNodeTest() {
-        LogootSRopes doc = (LogootSRopes) alg1.getDoc();
+        LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
 
         LogootSRopes.RopesNodes T1 = new LogootSRopes.RopesNodes(Arrays.asList("T1"), 0, null);
         LogootSRopes.RopesNodes T2 = new LogootSRopes.RopesNodes(Arrays.asList("T2"), 0, null);
@@ -656,7 +615,7 @@ public class LogootSRopesTest {
 
     @Test
     public void doubleRotateLTest() {
-        LogootSRopes doc = (LogootSRopes) alg1.getDoc();
+        LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
         LogootSRopes.RopesNodes T1 = new LogootSRopes.RopesNodes(Arrays.asList("T1"), 0, null);
         LogootSRopes.RopesNodes T2 = new LogootSRopes.RopesNodes(Arrays.asList("T2"), 0, null);
         LogootSRopes.RopesNodes T3 = new LogootSRopes.RopesNodes(Arrays.asList("T3"), 0, null);
@@ -683,7 +642,7 @@ public class LogootSRopesTest {
 
     @Test
     public void doubleRotateLNodeTest() {
-        LogootSRopes doc = (LogootSRopes) alg1.getDoc();
+        LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
         LogootSRopes.RopesNodes T1 = new LogootSRopes.RopesNodes(Arrays.asList("T1"), 0, null);
         LogootSRopes.RopesNodes T2 = new LogootSRopes.RopesNodes(Arrays.asList("T2"), 0, null);
         LogootSRopes.RopesNodes T3 = new LogootSRopes.RopesNodes(Arrays.asList("T3"), 0, null);
@@ -700,9 +659,7 @@ public class LogootSRopesTest {
         b.setRight(T3);
         doc.root = r;
         r.setRight(a);
-//        System.out.println(doc.root);
         doc.rotateRL(a, r);
-        //      System.out.println(doc.root);
         assertTrue("bad root", doc.root == r);
         assertTrue("bad r", r.getRight() == b);
         assertTrue("bad a", b.getLeft() == a);
@@ -715,7 +672,7 @@ public class LogootSRopesTest {
 
     @Test
     public void doubleRotateRTest() {
-        LogootSRopes doc = (LogootSRopes) alg1.getDoc();
+        LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
         LogootSRopes.RopesNodes T1 = new LogootSRopes.RopesNodes(Arrays.asList("T1"), 0, null);
         LogootSRopes.RopesNodes T2 = new LogootSRopes.RopesNodes(Arrays.asList("T2"), 0, null);
         LogootSRopes.RopesNodes T3 = new LogootSRopes.RopesNodes(Arrays.asList("T3"), 0, null);
@@ -742,7 +699,7 @@ public class LogootSRopesTest {
 
     @Test
     public void doubleRotateRNodeTest() {
-        LogootSRopes doc = (LogootSRopes) alg1.getDoc();
+        LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
         LogootSRopes.RopesNodes T1 = new LogootSRopes.RopesNodes(Arrays.asList("T1"), 0, null);
         LogootSRopes.RopesNodes T2 = new LogootSRopes.RopesNodes(Arrays.asList("T2"), 0, null);
         LogootSRopes.RopesNodes T3 = new LogootSRopes.RopesNodes(Arrays.asList("T3"), 0, null);
@@ -772,10 +729,12 @@ public class LogootSRopesTest {
 
     @Test
     public void splitTest() {
-        LogootSRopes doc = (LogootSRopes) alg1.getDoc();
+        LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
         LogootSRopes.RopesNodes a = new LogootSRopes.RopesNodes(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f'), 0, null);
         doc.root = a;
+        
         assertEquals("abcdef", alg1.lookup());
+        
         a.split(3);
 
         assertEquals("[a, b, c]", a.str.toString());
@@ -788,11 +747,13 @@ public class LogootSRopesTest {
 
     @Test
     public void splitTest2() {
-        LogootSRopes doc = (LogootSRopes) alg1.getDoc();
+        LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
         LogootSRopes.RopesNodes a = new LogootSRopes.RopesNodes(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f'), 0, null);
         LogootSRopes.RopesNodes b = new LogootSRopes.RopesNodes(Arrays.asList('1', '2', '3', '4', '5', '6'), 0, null);
         doc.root = a;
+
         assertEquals("abcdef", alg1.lookup());
+        
         a.split(3, b);
 
         assertEquals("[a, b, c]", a.str.toString());

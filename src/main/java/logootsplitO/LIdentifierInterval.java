@@ -7,6 +7,7 @@ public class LIdentifierInterval{
     int begin;
     int end;
     
+    
     public LIdentifier getBase() {
         return id;
     }

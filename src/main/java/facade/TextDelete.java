@@ -20,14 +20,9 @@ public class TextDelete implements TextOperation {
     public int getLength() {
         return this.length;
     }
-    
-    @Override
-    public void applyToText() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
     @Override
-    public LogootSOp toCDRTOp(LogootSDoc<Character> doc) {
-        return doc.delLocal(offset, length);
+    public LogootSOp applyTo(LogootSDoc<Character> doc) {
+        return doc.delLocal(offset, offset + length - 1);
     }
 }

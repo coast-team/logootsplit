@@ -25,6 +25,10 @@ public class LogootSBlockLight<T> extends LogootSBlock<T> implements Serializabl
     public LogootSBlockLight() {
     }
 
+    public LogootSBlockLight<T> clone() {
+        return new LogootSBlockLight(id.clone(), this.nbElement);
+    }
+    
     @Override
     List<T> getElements(int begin, int end) {
         throw new UnsupportedOperationException("Version light contains no data");

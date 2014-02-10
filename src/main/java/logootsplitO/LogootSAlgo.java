@@ -32,7 +32,7 @@ public class LogootSAlgo<T> extends MergeAlgorithm implements Serializable {
 
     @Override
     protected void integrateRemote(Operation message) throws IncorrectTraceException {
-        ((LogootSOp) message).apply((LogootSDoc) this.getDoc());
+        ((LogootSOp) message).execute((LogootSDoc) this.getDoc());
     }
 
     @Override

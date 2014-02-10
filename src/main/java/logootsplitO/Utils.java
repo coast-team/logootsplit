@@ -17,9 +17,9 @@ public class Utils {
         return l;
     }
 
-    public static String convertCharactersListToString(List<Character> r) {
+    public static <T> String convertCharactersListToString(List<T> r) {
         StringBuilder str = new StringBuilder(r.size());
-        for (Character o : r) {
+        for (T o : r) {
             str.append(o);
         }
         return str.toString();

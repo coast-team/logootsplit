@@ -9,8 +9,6 @@ import logootsplitO.LogootSOp;
  */
 public interface TextOperation {
 
-    public void applyToText();
-
-    public LogootSOp<Character> toCDRTOp(LogootSDoc<Character> doc);
+    public LogootSOp<Character> applyTo(LogootSDoc<Character> doc);
 
 }

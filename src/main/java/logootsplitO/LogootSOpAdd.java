@@ -22,7 +22,7 @@ public class LogootSOpAdd<T> extends LogootSOp<T> {
     }
     
     @Override
-    public List<TextOperation> apply(LogootSDoc<T> doc) {
+    public List<TextOperation> execute(LogootSDoc<T> doc) {
         return doc.addBlock(id, l);
     }
 

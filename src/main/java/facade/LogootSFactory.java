@@ -1,17 +1,20 @@
 package facade;
 
-import crdt.CRDT;
-import logootsplitO.LogootSAlgo;
-import logootsplitO.LogootSDocumentD;
+import logootsplitO.LogootSDoc;
+import logootsplitO.LogootSRopes;
 
 /**
  *
  * @author oster
  */
 public class LogootSFactory {
+
+    public static LogootSDoc<Character> create(int replicaNumber) {
+        LogootSDoc<Character> logootS = new LogootSRopes<Character>();
+        logootS.setReplicaNumber(replicaNumber);
+        return logootS;
+    }
+
     
-    public CRDT<String> createSite(int replicaNumber) {
-        return new LogootSAlgo<Character>(new LogootSDocumentD<Character>(), replicaNumber);
-    }   
-    
+
 }

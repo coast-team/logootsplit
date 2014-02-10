@@ -1,6 +1,7 @@
 package logootsplitO;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +20,12 @@ public class IdentifierInterval implements Serializable {
         this.end = end;
     }
 
+    public IdentifierInterval clone() {
+        List<Integer> baseCopy = new ArrayList<Integer>(base);
+        return new IdentifierInterval(baseCopy, this.begin, this.end);
+    }
+    
+    
     public List<Integer> getBase() {
         return base;
     }

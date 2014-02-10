@@ -23,7 +23,7 @@ public class LogootSOpDel<T> extends LogootSOp<T> {
     }
 
     @Override
-    public List<TextOperation> apply(LogootSDoc<T> doc) {
+    public List<TextOperation> execute(LogootSDoc<T> doc) {
         List l = new ArrayList<TextOperation>();
         for (IdentifierInterval id : lid) {
             l.addAll(doc.delBlock(id));

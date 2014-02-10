@@ -14,5 +14,5 @@ public abstract class LogootSOp<T>  implements Operation, Serializable{
   @Override
   abstract public LogootSOp<T> clone();
      
-  abstract public List<TextOperation> apply(LogootSDoc<T> doc);
+  abstract public List<TextOperation> execute(LogootSDoc<T> doc);
 }

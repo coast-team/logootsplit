@@ -10,10 +10,10 @@ import java.util.List;
  */
 public interface LogootSDoc<T> extends Document {
 
-    public LogootSDoc create();
+    public LogootSDoc<T> copy();
 
     public void setReplicaNumber(int i);
-
+    
     public LogootSOp insertLocal(int pos, List<T> l);
 
     public LogootSOp delLocal(int begin, int end);

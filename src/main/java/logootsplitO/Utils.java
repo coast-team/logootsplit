@@ -1,4 +1,4 @@
-package logootsplitO;
+package logootsplito;
 
 import java.util.LinkedList;
 import java.util.List;

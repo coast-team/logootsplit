@@ -1,9 +1,5 @@
-package logootsplitO;
+package logootsplito;
 
-import facade.TextDelete;
-import facade.TextInsert;
-import facade.TextOperation;
-import crdt.Operation;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -901,11 +897,6 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
     public int viewLength() {
         int ret = root == null ? 0 : root.sizeNodeAndChildren;
         return ret;
-    }
-
-    @Override
-    public void apply(Operation op) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public static class RopesNodes<T> {

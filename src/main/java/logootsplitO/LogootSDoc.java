@@ -1,14 +1,12 @@
-package logootsplitO;
+package logootsplito;
 
-import facade.TextOperation;
-import crdt.Document;
 import java.util.List;
 
 /**
  *
  * @author Stephane Martin <stephane@stephanemartin.fr>
  */
-public interface LogootSDoc<T> extends Document {
+public interface LogootSDoc<T> {
 
     public LogootSDoc<T> duplicate(int newReplicaNumber);
 
@@ -19,10 +17,16 @@ public interface LogootSDoc<T> extends Document {
     public LogootSOp delLocal(int begin, int end);
 
     public List<TextOperation> addBlock(Identifier id, List<T> l);
-    //public void addBlock(LogootSBlock block);
-    
-    //void delBlock(LogootSBlock block, int begin, int fin);
+
     public List<TextOperation> delBlock(IdentifierInterval id);
 
-    //public void setAlgo(LogootSAlgo algo);
+    /* 
+     * View of the document (without metadata)
+     */
+    public String view();
+    
+    /*
+     * Length of the view (to generate random operations)
+     */
+    public int viewLength();
 }

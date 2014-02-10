@@ -1,7 +1,5 @@
-package logootsplitO;
+package logootsplito;
 
-import facade.TextOperation;
-import crdt.Operation;
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,7 +7,7 @@ import java.util.List;
  *
  * @author Stephane Martin <stephane@stephanemartin.fr>
  */
-public abstract class LogootSOp<T>  implements Operation, Serializable{
+public abstract class LogootSOp<T>  implements Serializable{
     
   @Override
   abstract public LogootSOp<T> clone();

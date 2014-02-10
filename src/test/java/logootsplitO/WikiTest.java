@@ -1,10 +1,5 @@
-package logootsplitO;
+package logootsplito;
 
-import facade.LogootSFactory;
-import facade.TextDelete;
-import facade.TextDocument;
-import facade.TextInsert;
-import facade.TextOperation;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -92,7 +87,29 @@ public class WikiTest {
             doc2.apply(o);
         }
         assertEquals("a", doc2.toString());
-
     }
 
+    
+        @Test
+    public void scenarioAddAndSplit() {
+        LogootSDoc<Character> logootS1 = LogootSFactory.create(12);
+        TextOperation insert = new TextInsert(2, "abc");
+        LogootSOp<Character> op = insert.applyTo(logootS1);
+
+
+        LogootSDoc<Character> logootS2 = LogootSFactory.create(14);
+        List<TextOperation> ops = op.execute(logootS2);
+
+        assertEquals(logootS2.view(), "abc");
+        assertEquals(logootS2.view(), logootS1.view());
+        
+        StringBufferTextDocument doc2 = new StringBufferTextDocument();
+        for (TextOperation o : ops) {
+            doc2.apply(o);
+        }
+        assertEquals(doc2.toString(), "abc");
+    }
+    
+    
+    
 }

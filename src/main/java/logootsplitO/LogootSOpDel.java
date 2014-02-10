@@ -1,6 +1,5 @@
-package logootsplitO;
+package logootsplito;
 
-import facade.TextOperation;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

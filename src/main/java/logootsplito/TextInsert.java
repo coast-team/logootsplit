@@ -1,9 +1,6 @@
-package facade;
+package logootsplito;
 
 import java.util.List;
-import logootsplitO.LogootSDoc;
-import logootsplitO.LogootSOp;
-import logootsplitO.Utils;
 
 public class TextInsert implements TextOperation {
 

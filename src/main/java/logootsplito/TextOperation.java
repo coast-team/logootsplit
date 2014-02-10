@@ -1,7 +1,4 @@
-package facade;
-
-import logootsplitO.LogootSDoc;
-import logootsplitO.LogootSOp;
+package logootsplito;
 
 /**
  *

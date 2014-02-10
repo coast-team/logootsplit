@@ -1,53 +1,53 @@
-package logootsplitO;
+package logootsplito;
 
-import crdt.CRDT;
-import crdt.Operation;
-import crdt.IncorrectTraceException;
-import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
-import crdt.MergeAlgorithm;
-import crdt.SequenceOperation;
 
 /**
  *
  * @author Stephane Martin <stephane@stephanemartin.fr>
  */
-public class LogootSAlgo<T> extends MergeAlgorithm implements Serializable {
+public class LogootSAlgo {
 
-    public LogootSAlgo(LogootSDoc<T> doc, int siteId) {
-        super(doc, siteId);
-        this.getLDoc().setReplicaNumber(siteId);
+    private LogootSDoc<Character> doc;
+    
+    public LogootSAlgo(LogootSDoc<Character> doc, int siteId) {
+        this.doc = doc;
+        this.doc.setReplicaNumber(siteId);
     }
 
-    @Override
     public void setReplicaNumber(int replicaNumber) {
-        super.setReplicaNumber(replicaNumber);
-        this.getLDoc().setReplicaNumber(replicaNumber);
+        this.doc.setReplicaNumber(replicaNumber);
     }
 
-    LogootSDoc<T> getLDoc() {
-        return (LogootSDoc<T>) this.getDoc();
+    public LogootSDoc<Character> getDoc() {
+        return this.doc;
+    }
+    
+    public String lookup() {
+        return this.doc.view();
+    }
+    
+    public List<TextOperation> integrateRemote(LogootSOp op) {
+        return op.execute(this.doc);
+    }
+    
+    public LogootSOp localInsert(TextOperation op) {
+        return op.applyTo(doc);
     }
 
-    @Override
-    protected void integrateRemote(Operation message) throws IncorrectTraceException {
-        ((LogootSOp) message).execute((LogootSDoc) this.getDoc());
+    public LogootSOp localDelete(TextOperation op) {
+        return op.applyTo(doc);
     }
 
-    @Override
-    protected List<Operation> localInsert(SequenceOperation opt) throws IncorrectTraceException {
-        List ret = new LinkedList();
-        ret.add(getLDoc().insertLocal(opt.getPosition(), opt.getContent()));
-
-        return ret;
+    public LogootSOp insert(int position, String content) {
+        return (new TextInsert(position, content)).applyTo(this.doc);
     }
-
-    @Override
-    protected List<Operation> localDelete(SequenceOperation opt) throws IncorrectTraceException {
-        List ret = new LinkedList();
-        ret.add(getLDoc().delLocal(opt.getPosition(), opt.getLenghOfADel() + opt.getPosition() - 1));
-
-        return ret;
+        
+    public LogootSOp remove(int position, int length) {
+        return (new TextDelete(position, length)).applyTo(this.doc);
+    }
+    
+    public List<TextOperation> applyRemote(LogootSOp op) {
+        return op.execute(this.doc);
     }
 }

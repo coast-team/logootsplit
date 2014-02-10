@@ -40,8 +40,9 @@ public class IdentifierInterval implements Serializable, Cloneable {
 
     @Override
     public IdentifierInterval clone() throws CloneNotSupportedException {
-        List<Integer> baseCopy = new LinkedList<Integer>(base);
-        return new IdentifierInterval(baseCopy, this.begin, this.end);
+        IdentifierInterval o = (IdentifierInterval) super.clone();
+        o.base = new LinkedList<Integer>(base);
+        return o;
     }
     
     

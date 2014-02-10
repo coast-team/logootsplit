@@ -20,9 +20,10 @@ package fr.loria.score.logootsplito;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
-public class Identifier implements Comparable, Iterable, Serializable {
+public class Identifier implements Comparable, Iterable, Serializable, Cloneable {
 
     List<Integer> base;
     Integer last;
@@ -35,8 +36,6 @@ public class Identifier implements Comparable, Iterable, Serializable {
     /**
      * -1 this< t 0 this=t 1 this > t
      *
-     * @param t
-     * @return
      */
     public Identifier(List<Integer> base) {
         this.base = base;
@@ -100,11 +99,18 @@ public class Identifier implements Comparable, Iterable, Serializable {
 
     @Override
     public String toString() {
-        return "Identifiant{" + base + "," + last + '}';
+        return "Identifier{" + base + "," + last + '}';
     }
 
-    boolean hasPlaceAfter(Identifier next, int lenght) {
-        int max = lenght + last;
+    public Identifier clone() throws CloneNotSupportedException {
+        Identifier o = (Identifier) super.clone();
+        o.base = new LinkedList(base);
+        o.last = last;  // useless?
+        return o;
+    }
+
+    boolean hasPlaceAfter(Identifier next, int length) {
+        int max = length + last;
         Iterator<Integer> i = this.base.iterator();
         Iterator<Integer> i2 = next.iterator();
         while (i.hasNext() && i2.hasNext()) {
@@ -120,8 +126,8 @@ public class Identifier implements Comparable, Iterable, Serializable {
         }
     }
 
-    boolean hasPlaceBefore(Identifier prev, int lenght) {
-        int min = last - lenght;
+    boolean hasPlaceBefore(Identifier prev, int length) {
+        int min = last - length;
         Iterator<Integer> i = this.base.iterator();
         Iterator<Integer> i2 = prev.iterator();
         while (i.hasNext() && i2.hasNext()) {
@@ -154,11 +160,6 @@ public class Identifier implements Comparable, Iterable, Serializable {
 
     }
 
-    /**
-     * @param l
-     * @param l2
-     * @return
-     */
     int maxOffsetBeforeNex(Identifier next, int max) {
         Iterator<Integer> i = this.base.iterator();
         Iterator<Integer> i2 = next.iterator();

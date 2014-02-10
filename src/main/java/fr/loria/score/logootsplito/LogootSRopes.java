@@ -23,7 +23,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
+public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
 
     int replicaNumber = 0;
     int clock = 0;
@@ -596,21 +596,17 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
     }
 
     @Override
-    @SuppressWarnings("CloneDoesntCallSuperClone")
     public LogootSRopes<T> clone() throws CloneNotSupportedException {
-        LogootSRopes<T> copy = new LogootSRopes<T>();
-        copy.replicaNumber = this.replicaNumber;
-        copy.clock = this.clock;
-        copy.root = this.root.clone();
-
-        copy.mapBaseToBlock = new HashMap<List<Integer>, LogootSBlockLight>();
+        LogootSRopes<T> o = (LogootSRopes<T>) super.clone();
+        o.root = root.clone();
+        o.mapBaseToBlock = new HashMap<List<Integer>, LogootSBlockLight>();
         for (Map.Entry<List<Integer>, LogootSBlockLight> e : this.mapBaseToBlock.entrySet()) {
             List<Integer> key = new LinkedList<Integer>(e.getKey()); // 
             LogootSBlockLight value = e.getValue().clone();
-            copy.mapBaseToBlock.put(key, value);
+            o.mapBaseToBlock.put(key, value);
         }
 
-        return copy;
+        return o;
     }
 
     @Override
@@ -656,15 +652,19 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
         return ret;
     }
 
-    public static class RopesNodes<T> {
-        public static int LEFT = 0;
-        public static int RIGHT = 1;
+    public static class RopesNodes<T> implements Serializable, Cloneable {
+        public static final int LEFT = 0;
+        public static final int RIGHT = 1;
         int offset;
         List<T> str;
         LogootSBlockLight<String> block;
         private RopesNodes[] childrenLeftRight = new RopesNodes[2];
         private int height = 1;
         private int sizeNodeAndChildren = 0;
+
+        public RopesNodes() {
+
+        }
 
         public RopesNodes(List<T> str, int offset, LogootSBlockLight block) {
             this(str, offset, block, true);
@@ -689,19 +689,13 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
         }
 
         @Override
-        @SuppressWarnings("CloneDoesntCallSuperClone")
         public RopesNodes<T> clone() throws CloneNotSupportedException {
-            List<T> strCopy = new ArrayList<T>();
-            for (T t : str) {
-                strCopy.add(t); // do not need to clone 't' since it is an atom (which is never modified)
-            }
-            RopesNodes<T> copy = new RopesNodes<T>(strCopy, this.offset, this.block.clone());
-            copy.sizeNodeAndChildren = this.sizeNodeAndChildren;
-            copy.height = this.height;
-            copy.childrenLeftRight[LEFT] = this.childrenLeftRight[LEFT].clone();
-            copy.childrenLeftRight[RIGHT] = this.childrenLeftRight[RIGHT].clone();
+            RopesNodes<T> o = (RopesNodes<T>) super.clone();
+            o.str = new ArrayList<T>(str); // do not need to clone value since they are atoms (which are never modified)
+            o.childrenLeftRight[LEFT] = this.childrenLeftRight[LEFT].clone();
+            o.childrenLeftRight[RIGHT] = this.childrenLeftRight[RIGHT].clone();
 
-            return copy;
+            return o;
         }
 
         public void addString(int string) {
@@ -844,37 +838,38 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
 
         @Override
         public String toString() {
-            String str2 = "";
+            StringBuffer str2 = new StringBuffer();
             for (Object o : str) {
-                str2 += o;
+                str2.append(o);
             }
-            return new IdentifierInterval(this.block.id.base, this.offset, this.maxOffset()).toString() + "," + str2;
+
+            return new IdentifierInterval(this.block.id.base, this.offset, this.maxOffset()).toString() + "," + str2.toString();
         }
 
         public String viewRec() {
-            String str2 = "";
+            StringBuffer str2 = new StringBuffer();
             if (getLeft() != null || getRight() != null) {
-                str2 += "( ";
+                str2.append("( ");
             }
             if (getLeft() != null) {
-                str2 += getLeft().viewRec();
+                str2.append(getLeft().viewRec());
             }
             if (getLeft() != null || getRight() != null) {
-                str2 += " , ";
+                str2.append(" , ");
             }
             for (Object o : str) {
-                str2 += o;
+                str2.append(o);
             }
             if (getLeft() != null || getRight() != null) {
-                str2 += " , ";
+                str2.append(" , ");
             }
             if (getRight() != null) {
-                str2 += getRight().viewRec();
+                str2.append(getRight().viewRec());
             }
             if (getLeft() != null || getRight() != null) {
-                str2 += " )";
+                str2.append(" )");
             }
-            return str2;
+            return str2.toString();
         }
 
         public IdentifierInterval getIdentifierInterval() {

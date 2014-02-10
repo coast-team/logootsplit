@@ -35,8 +35,14 @@ public class LogootSOpDel<T> implements LogootSOp<T> {
     }
 
     @Override
-    public LogootSOp<T> clone() throws CloneNotSupportedException {
-        return new LogootSOpDel<T>(new LinkedList(lid));
+    public LogootSOpDel<T> clone() throws CloneNotSupportedException {
+        LogootSOpDel<T> o = (LogootSOpDel<T>) super.clone();
+        o.lid = new LinkedList();
+
+        for (IdentifierInterval id : this.lid) {
+            o.lid.add(id.clone());
+        }
+        return o;
     }
 
     @Override

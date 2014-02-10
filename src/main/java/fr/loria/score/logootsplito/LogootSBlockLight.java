@@ -25,7 +25,7 @@ import java.util.List;
  * This block kind contain no elements only ids.
  * The elements are on view
  */
-public class LogootSBlockLight<T> extends LogootSBlock<T> implements Serializable {
+public class LogootSBlockLight<T> extends LogootSBlock<T> implements Serializable, Cloneable {
 
     int nbElement = 0;
 
@@ -43,9 +43,9 @@ public class LogootSBlockLight<T> extends LogootSBlock<T> implements Serializabl
     }
 
     @Override
-    @SuppressWarnings("CloneDoesntCallSuperClone")
     public LogootSBlockLight<T> clone() throws CloneNotSupportedException {
-        return new LogootSBlockLight(id.clone(), this.nbElement);
+        LogootSBlockLight<T> o = (LogootSBlockLight<T>) super.clone();
+        return o;
     }
 
     @Override

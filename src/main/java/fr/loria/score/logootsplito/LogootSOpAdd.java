@@ -18,6 +18,7 @@
  */
 package fr.loria.score.logootsplito;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class LogootSOpAdd<T> implements LogootSOp<T> {
@@ -25,7 +26,6 @@ public class LogootSOpAdd<T> implements LogootSOp<T> {
     List<T> l;
 
     public LogootSOpAdd() {
-
     }
 
     public LogootSOpAdd(Identifier id, List<T> l) {
@@ -35,7 +35,10 @@ public class LogootSOpAdd<T> implements LogootSOp<T> {
 
     @Override
     public LogootSOpAdd<T> clone() throws CloneNotSupportedException {
-        return new LogootSOpAdd<T>(id, l);
+        LogootSOpAdd<T> o = (LogootSOpAdd<T>) super.clone();
+        o.id = id.clone();
+        o.l = new LinkedList<T>(l);
+        return o;
     }
 
     @Override

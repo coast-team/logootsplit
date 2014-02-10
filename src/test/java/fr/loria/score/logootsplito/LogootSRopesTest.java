@@ -1,17 +1,15 @@
-package logootsplito;
+package fr.loria.score.logootsplito;
+
+import fr.loria.score.logootsplito.LogootSRopes.RopesNodes;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.LinkedList;
-import logootsplito.LogootSRopes.RopesNodes;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Ignore;
 import java.util.List;
-/**
- *
- * @author Stephane Martin <stephane@stephanemartin.fr>
- */
+
+import static org.junit.Assert.*;
+
 public class LogootSRopesTest {
 
     private LogootSAlgo alg1;
@@ -19,253 +17,6 @@ public class LogootSRopesTest {
     private LogootSAlgo alg3;
     private LogootSAlgo alg4;
 
-    @Before
-    public void setup() {
-        this.alg1 = new LogootSAlgo(new LogootSRopes<Character>(), 1);
-        this.alg2 = new LogootSAlgo(new LogootSRopes<Character>(), 50);
-        this.alg3 = new LogootSAlgo(new LogootSRopes<Character>(), 75);
-        this.alg4 = new LogootSAlgo(new LogootSRopes<Character>(), 77);
-    }
-
-    @Test
-    public void simpleAddMergeCheck() throws Exception {
-        LinkedList<LogootSOp> messages = new LinkedList<LogootSOp>();
-        messages.add(alg1.insert(0, "Hello"));
-        
-        assertEquals("Hello", alg1.lookup());
-        
-        messages.add(alg1.insert(5, " world"));
-        
-        assertEquals("Hello world", alg1.lookup());
-        LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
-        LogootSRopes.RopesNodes<Character> root = doc.root;
-        assertNull(root.getLeft());
-        assertNull(root.getRight());
-        assertEquals("Hello world", Utils.convertCharactersListToString(root.str));
-        assertEquals(1, root.getHeightOfTree());
-        assertEquals(11, root.getSizeNodeAndChildren());
-
-        messages.add(alg1.insert(0, "---"));
-        
-        root = doc.root;
-        assertNull(root.getLeft());
-        assertNull(root.getRight());
-        assertEquals("---Hello world", Utils.convertCharactersListToString(root.str));
-        assertEquals(1, root.getHeightOfTree());
-        assertEquals(14, root.getSizeNodeAndChildren());
-
-        // Apply to other sites
-        alg2.applyRemote(messages.pop());
-        
-        assertEquals("Hello", alg2.lookup());
-        LogootSRopes<Character> doc2 = (LogootSRopes<Character>) alg2.getDoc();
-        root = doc2.root;
-        assertEquals(1, root.getHeightOfTree());
-        assertEquals(5, root.getSizeNodeAndChildren());
-        assertEquals("Hello", Utils.convertCharactersListToString(root.str));
-        assertNull(root.getLeft());
-        assertNull(root.getRight());
-
-        alg2.applyRemote(messages.pop());
-        
-        assertEquals("Hello world", alg2.lookup());
-        doc2 = (LogootSRopes<Character>) alg2.getDoc();
-        root = doc2.root;
-        assertEquals(1, root.getHeightOfTree());
-        assertEquals(11, root.getSizeNodeAndChildren());
-        assertEquals("Hello world", Utils.convertCharactersListToString(root.str));
-        assertNull(root.getLeft());
-        assertNull(root.getRight());
-
-        alg2.applyRemote(messages.pop());
-        
-        assertEquals("---Hello world", alg2.lookup());
-        doc2 = (LogootSRopes<Character>) alg2.getDoc();
-        root = doc2.root;
-        assertEquals(1, root.getHeightOfTree());
-        assertEquals(14, root.getSizeNodeAndChildren());
-        assertEquals("---Hello world", Utils.convertCharactersListToString(root.str));
-        assertNull(root.getLeft());
-        assertNull(root.getRight());
-    }
-
-    @Test
-    public void testTest() throws Exception {
-        LinkedList<LogootSOp> messages = new LinkedList();
-        messages.add(alg3.insert(0, " world"));
-
-        alg1.applyRemote(messages.get(0));
-        messages.add(alg1.insert(0, "Hello"));
-        messages.add(alg1.insert(11, "Every ones ?"));
-        
-        LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
-        LinkedList<RopesNodes> lp = new LinkedList<RopesNodes>();
-        doc.searchFull(doc.root, ((LogootSOpAdd<Character>) messages.getLast()).id, lp);
-        assertTrue(lp.size() > 0);
-        doc.searchFull(doc.root, ((LogootSOpAdd<Character>) messages.getLast()).id, lp);
-        lp.clear();
-        assertFalse(doc.searchFull(doc.root, new Identifier(Arrays.asList(0, 0, 0, 0, 0), 42), lp));
-        assertEquals(lp.size(), 0);
-    }
-
-    @Test
-    public void simpleAddCheck() throws Exception {
-        LinkedList<LogootSOp> messages = new LinkedList();
-        messages.add(alg3.insert(0, " world"));
-
-        alg1.applyRemote(messages.get(0));
-        messages.add(alg1.insert(0, "Hello"));
-        
-        assertEquals("Hello world", alg1.lookup());
-        LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
-        LogootSRopes.RopesNodes root = doc.root;
-        LogootSRopes.RopesNodes prev = root.getLeft();
-        assertEquals(" world", Utils.convertCharactersListToString(root.str));
-        assertEquals("Hello", Utils.convertCharactersListToString(prev.str));
-        assertEquals(2, root.getHeightOfTree());
-        assertEquals(1, prev.getHeightOfTree());
-        assertEquals(11, root.getSizeNodeAndChildren());
-        assertEquals(5, prev.getSizeNodeAndChildren());
-        assertEquals(1, prev.getHeightOfTree());
-        assertEquals(6, root.getSize());
-        assertEquals(5, prev.getSize());
-
-        messages.add(alg1.insert(11, "Every ones ?"));
-        
-        root = doc.root;
-        LogootSRopes.RopesNodes next = root.getRight();
-        LogootSRopes.RopesNodes previous = root.getLeft();
-        assertEquals(2, root.getHeightOfTree());
-        assertEquals(1, next.getHeightOfTree());
-        assertEquals(1, previous.getHeightOfTree());
-        assertEquals(23, root.getSizeNodeAndChildren());
-        assertEquals(12, next.getSizeNodeAndChildren());
-        assertEquals(5, previous.getSizeNodeAndChildren());
-        assertEquals("Hello", Utils.convertCharactersListToString(previous.str));
-        assertEquals(" world", Utils.convertCharactersListToString(root.str));
-        assertEquals("Every ones ?", Utils.convertCharactersListToString(next.str));
-        
-        alg2.applyRemote(messages.pollLast());
-        alg2.applyRemote(messages.pollLast());
-        alg2.applyRemote(messages.pollLast());
-        
-        root = ((LogootSRopes<Character>) alg2.getDoc()).root;
-        next = root.getRight();
-        previous = root.getLeft();
-        assertEquals(2, root.getHeightOfTree());
-        assertEquals(1, next.getHeightOfTree());
-        assertEquals(1, previous.getHeightOfTree());
-        assertEquals(23, root.getSizeNodeAndChildren());
-        assertEquals(12, next.getSizeNodeAndChildren());
-        assertEquals(5, previous.getSizeNodeAndChildren());
-        assertEquals("Hello", Utils.convertCharactersListToString(previous.str));
-        assertEquals(" world", Utils.convertCharactersListToString(root.str));
-        assertEquals("Every ones ?", Utils.convertCharactersListToString(next.str));
-    }
-
-    @Test
-    public void addDel() throws Exception {
-        LogootSOp p = alg3.insert(0, "abcd");
-        alg2.applyRemote(p);
-        alg1.applyRemote(p);
-        
-        assertEquals("abcd", alg2.lookup());
-        
-        LogootSOp p2 = alg2.remove(0, 2);
-        LogootSOp p3 = alg2.remove(0, 2);
-        alg1.applyRemote(p2);
-        
-        assertEquals("cd", alg1.lookup());
-        
-        alg1.applyRemote(p3);
-        
-        assertEquals("", alg1.lookup());
-
-        alg3.applyRemote(p3);
-        
-        assertEquals("ab", alg3.lookup());
-        
-        alg3.applyRemote(p2);
-        
-        assertEquals("", alg3.lookup());
-    }
-
-    @Test
-    public void simpleAddDel() throws Exception {
-        LogootSOp op1 = alg1.insert(0, "Test1234");
-        
-        assertEquals("Test1234", alg1.lookup());
-        assertTrue(scoreChecks(alg1, alg2, alg3));
-        
-        LogootSOp op2 = alg1.insert(5, "haha");
-        
-        assertEquals("Test1haha234", alg1.lookup());
-        assertEquals("[T, e, s, t, 1, 2, 3, 4]", ((LogootSOpAdd<Character>) op1).l.toString());
-        assertEquals("[h, a, h, a]", ((LogootSOpAdd<Character>) op2).l.toString());
-        assertTrue(scoreChecks(alg1, alg2, alg3));
-        
-        alg2.applyRemote(op2);
-        
-        assertEquals("haha", alg2.lookup());
-        assertTrue(scoreChecks(alg1, alg2, alg3));
-        
-        alg2.applyRemote(op1);
-        
-        assertEquals("Test1haha234", alg2.lookup());
-        assertTrue(scoreChecks(alg1, alg2, alg3));
-        
-        alg3.applyRemote(op1);
-        alg3.applyRemote(op2);
-        
-        assertEquals("Test1haha234", alg3.lookup());
-        assertTrue(scoreChecks(alg1, alg2, alg3));
-
-        // Del
-        LogootSOp op3 = alg3.remove(4, 6);
-
-        assertEquals("Test34", alg3.lookup());
-
-        alg2.applyRemote(op3);
-        
-        assertEquals("Test34", alg2.lookup());
-
-        // Another Del
-        assertEquals("Test1haha234", alg1.lookup());
-        
-        LogootSOp op4 = alg1.remove(3, 4);
-        
-        assertEquals("Tesha234", alg1.lookup());
-
-        // integration of Del
-        alg1.applyRemote(op3);
-
-        assertEquals("Tes34", alg1.lookup());
-
-        alg2.applyRemote(op4);
-
-        assertEquals("Tes34", alg2.lookup());
-
-        alg3.applyRemote(op4);
-
-        assertEquals("Tes34", alg3.lookup());
-        
-        LogootSOp op5 = alg3.insert(2, "toto");
-
-        assertTrue(scoreChecks(alg1, alg2, alg3));
-
-        LogootSOp op6 = alg2.insert(3, "jiji");
-
-        alg1.applyRemote(op6);
-        alg1.applyRemote(op5);
-        alg2.applyRemote(op5);
-        alg3.applyRemote(op6);
-
-        assertTrue(scoreChecks(alg1, alg2, alg3));
-        assertEquals(alg1.lookup(), alg2.lookup());
-        assertEquals(alg2.lookup(), alg3.lookup());
-    }
-
-    
     static LinkedList<RopesNodes> browse(LogootSAlgo alg) {
         RopesNodes node = ((LogootSRopes) alg.getDoc()).root;
         LinkedList<RopesNodes> ret = new LinkedList<RopesNodes>();
@@ -328,17 +79,250 @@ public class LogootSRopesTest {
         return ret;
     }
 
-    @Ignore
-    @Test
-    public void testRnd() throws Exception {
-        LogootSOp op1 = alg1.insert(0, "test");
-        LogootSOp op2 = alg2.insert(0, "jklm");
-        alg3.applyRemote(op2);
-        alg3.applyRemote(op1);
-        alg3.insert(4, "now");
+    @Before
+    public void setup() {
+        this.alg1 = new LogootSAlgo(new LogootSRopes<Character>(), 1);
+        this.alg2 = new LogootSAlgo(new LogootSRopes<Character>(), 50);
+        this.alg3 = new LogootSAlgo(new LogootSRopes<Character>(), 75);
+        this.alg4 = new LogootSAlgo(new LogootSRopes<Character>(), 77);
+    }
 
-        System.out.println(alg3.lookup());
-        System.out.println("");
+    @Test
+    public void simpleAddMergeCheck() throws Exception {
+        LinkedList<LogootSOp> messages = new LinkedList<LogootSOp>();
+        messages.add(alg1.insert(0, "Hello"));
+
+        assertEquals("Hello", alg1.lookup());
+
+        messages.add(alg1.insert(5, " world"));
+
+        assertEquals("Hello world", alg1.lookup());
+        LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
+        LogootSRopes.RopesNodes<Character> root = doc.root;
+        assertNull(root.getLeft());
+        assertNull(root.getRight());
+        assertEquals("Hello world", Utils.convertCharactersListToString(root.str));
+        assertEquals(1, root.getHeightOfTree());
+        assertEquals(11, root.getSizeNodeAndChildren());
+
+        messages.add(alg1.insert(0, "---"));
+
+        root = doc.root;
+        assertNull(root.getLeft());
+        assertNull(root.getRight());
+        assertEquals("---Hello world", Utils.convertCharactersListToString(root.str));
+        assertEquals(1, root.getHeightOfTree());
+        assertEquals(14, root.getSizeNodeAndChildren());
+
+        // Apply to other sites
+        alg2.applyRemote(messages.pop());
+
+        assertEquals("Hello", alg2.lookup());
+        LogootSRopes<Character> doc2 = (LogootSRopes<Character>) alg2.getDoc();
+        root = doc2.root;
+        assertEquals(1, root.getHeightOfTree());
+        assertEquals(5, root.getSizeNodeAndChildren());
+        assertEquals("Hello", Utils.convertCharactersListToString(root.str));
+        assertNull(root.getLeft());
+        assertNull(root.getRight());
+
+        alg2.applyRemote(messages.pop());
+
+        assertEquals("Hello world", alg2.lookup());
+        doc2 = (LogootSRopes<Character>) alg2.getDoc();
+        root = doc2.root;
+        assertEquals(1, root.getHeightOfTree());
+        assertEquals(11, root.getSizeNodeAndChildren());
+        assertEquals("Hello world", Utils.convertCharactersListToString(root.str));
+        assertNull(root.getLeft());
+        assertNull(root.getRight());
+
+        alg2.applyRemote(messages.pop());
+
+        assertEquals("---Hello world", alg2.lookup());
+        doc2 = (LogootSRopes<Character>) alg2.getDoc();
+        root = doc2.root;
+        assertEquals(1, root.getHeightOfTree());
+        assertEquals(14, root.getSizeNodeAndChildren());
+        assertEquals("---Hello world", Utils.convertCharactersListToString(root.str));
+        assertNull(root.getLeft());
+        assertNull(root.getRight());
+    }
+
+    @Test
+    public void testTest() throws Exception {
+        LinkedList<LogootSOp> messages = new LinkedList();
+        messages.add(alg3.insert(0, " world"));
+
+        alg1.applyRemote(messages.get(0));
+        messages.add(alg1.insert(0, "Hello"));
+        messages.add(alg1.insert(11, "Every ones ?"));
+
+        LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
+        LinkedList<RopesNodes> lp = new LinkedList<RopesNodes>();
+        doc.searchFull(doc.root, ((LogootSOpAdd<Character>) messages.getLast()).id, lp);
+        assertTrue(lp.size() > 0);
+        doc.searchFull(doc.root, ((LogootSOpAdd<Character>) messages.getLast()).id, lp);
+        lp.clear();
+        assertFalse(doc.searchFull(doc.root, new Identifier(Arrays.asList(0, 0, 0, 0, 0), 42), lp));
+        assertEquals(lp.size(), 0);
+    }
+
+    @Test
+    public void simpleAddCheck() throws Exception {
+        LinkedList<LogootSOp> messages = new LinkedList();
+        messages.add(alg3.insert(0, " world"));
+
+        alg1.applyRemote(messages.get(0));
+        messages.add(alg1.insert(0, "Hello"));
+
+        assertEquals("Hello world", alg1.lookup());
+        LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
+        LogootSRopes.RopesNodes root = doc.root;
+        LogootSRopes.RopesNodes prev = root.getLeft();
+        assertEquals(" world", Utils.convertCharactersListToString(root.str));
+        assertEquals("Hello", Utils.convertCharactersListToString(prev.str));
+        assertEquals(2, root.getHeightOfTree());
+        assertEquals(1, prev.getHeightOfTree());
+        assertEquals(11, root.getSizeNodeAndChildren());
+        assertEquals(5, prev.getSizeNodeAndChildren());
+        assertEquals(1, prev.getHeightOfTree());
+        assertEquals(6, root.getSize());
+        assertEquals(5, prev.getSize());
+
+        messages.add(alg1.insert(11, "Every ones ?"));
+
+        root = doc.root;
+        LogootSRopes.RopesNodes next = root.getRight();
+        LogootSRopes.RopesNodes previous = root.getLeft();
+        assertEquals(2, root.getHeightOfTree());
+        assertEquals(1, next.getHeightOfTree());
+        assertEquals(1, previous.getHeightOfTree());
+        assertEquals(23, root.getSizeNodeAndChildren());
+        assertEquals(12, next.getSizeNodeAndChildren());
+        assertEquals(5, previous.getSizeNodeAndChildren());
+        assertEquals("Hello", Utils.convertCharactersListToString(previous.str));
+        assertEquals(" world", Utils.convertCharactersListToString(root.str));
+        assertEquals("Every ones ?", Utils.convertCharactersListToString(next.str));
+
+        alg2.applyRemote(messages.pollLast());
+        alg2.applyRemote(messages.pollLast());
+        alg2.applyRemote(messages.pollLast());
+
+        root = ((LogootSRopes<Character>) alg2.getDoc()).root;
+        next = root.getRight();
+        previous = root.getLeft();
+        assertEquals(2, root.getHeightOfTree());
+        assertEquals(1, next.getHeightOfTree());
+        assertEquals(1, previous.getHeightOfTree());
+        assertEquals(23, root.getSizeNodeAndChildren());
+        assertEquals(12, next.getSizeNodeAndChildren());
+        assertEquals(5, previous.getSizeNodeAndChildren());
+        assertEquals("Hello", Utils.convertCharactersListToString(previous.str));
+        assertEquals(" world", Utils.convertCharactersListToString(root.str));
+        assertEquals("Every ones ?", Utils.convertCharactersListToString(next.str));
+    }
+
+    @Test
+    public void addDel() throws Exception {
+        LogootSOp p = alg3.insert(0, "abcd");
+        alg2.applyRemote(p);
+        alg1.applyRemote(p);
+
+        assertEquals("abcd", alg2.lookup());
+
+        LogootSOp p2 = alg2.remove(0, 2);
+        LogootSOp p3 = alg2.remove(0, 2);
+        alg1.applyRemote(p2);
+
+        assertEquals("cd", alg1.lookup());
+
+        alg1.applyRemote(p3);
+
+        assertEquals("", alg1.lookup());
+
+        alg3.applyRemote(p3);
+
+        assertEquals("ab", alg3.lookup());
+
+        alg3.applyRemote(p2);
+
+        assertEquals("", alg3.lookup());
+    }
+
+    @Test
+    public void simpleAddDel() throws Exception {
+        LogootSOp op1 = alg1.insert(0, "Test1234");
+
+        assertEquals("Test1234", alg1.lookup());
+        assertTrue(scoreChecks(alg1, alg2, alg3));
+
+        LogootSOp op2 = alg1.insert(5, "haha");
+
+        assertEquals("Test1haha234", alg1.lookup());
+        assertEquals("[T, e, s, t, 1, 2, 3, 4]", ((LogootSOpAdd<Character>) op1).l.toString());
+        assertEquals("[h, a, h, a]", ((LogootSOpAdd<Character>) op2).l.toString());
+        assertTrue(scoreChecks(alg1, alg2, alg3));
+
+        alg2.applyRemote(op2);
+
+        assertEquals("haha", alg2.lookup());
+        assertTrue(scoreChecks(alg1, alg2, alg3));
+
+        alg2.applyRemote(op1);
+
+        assertEquals("Test1haha234", alg2.lookup());
+        assertTrue(scoreChecks(alg1, alg2, alg3));
+
+        alg3.applyRemote(op1);
+        alg3.applyRemote(op2);
+
+        assertEquals("Test1haha234", alg3.lookup());
+        assertTrue(scoreChecks(alg1, alg2, alg3));
+
+        // Del
+        LogootSOp op3 = alg3.remove(4, 6);
+
+        assertEquals("Test34", alg3.lookup());
+
+        alg2.applyRemote(op3);
+
+        assertEquals("Test34", alg2.lookup());
+
+        // Another Del
+        assertEquals("Test1haha234", alg1.lookup());
+
+        LogootSOp op4 = alg1.remove(3, 4);
+
+        assertEquals("Tesha234", alg1.lookup());
+
+        // integration of Del
+        alg1.applyRemote(op3);
+
+        assertEquals("Tes34", alg1.lookup());
+
+        alg2.applyRemote(op4);
+
+        assertEquals("Tes34", alg2.lookup());
+
+        alg3.applyRemote(op4);
+
+        assertEquals("Tes34", alg3.lookup());
+
+        LogootSOp op5 = alg3.insert(2, "toto");
+
+        assertTrue(scoreChecks(alg1, alg2, alg3));
+
+        LogootSOp op6 = alg2.insert(3, "jiji");
+
+        alg1.applyRemote(op6);
+        alg1.applyRemote(op5);
+        alg2.applyRemote(op5);
+        alg3.applyRemote(op6);
+
+        assertTrue(scoreChecks(alg1, alg2, alg3));
+        assertEquals(alg1.lookup(), alg2.lookup());
+        assertEquals(alg2.lookup(), alg3.lookup());
     }
 
     @Test
@@ -646,9 +630,9 @@ public class LogootSRopesTest {
         LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
         LogootSRopes.RopesNodes a = new LogootSRopes.RopesNodes(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f'), 0, null);
         doc.root = a;
-        
+
         assertEquals("abcdef", alg1.lookup());
-        
+
         a.split(3);
 
         assertEquals("[a, b, c]", a.str.toString());
@@ -667,7 +651,7 @@ public class LogootSRopesTest {
         doc.root = a;
 
         assertEquals("abcdef", alg1.lookup());
-        
+
         a.split(3, b);
 
         assertEquals("[a, b, c]", a.str.toString());

@@ -1,4 +1,4 @@
-package logootsplito;
+package fr.loria.score.logootsplito;
 
 /**
  *

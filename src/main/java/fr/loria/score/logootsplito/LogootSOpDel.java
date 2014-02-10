@@ -1,23 +1,23 @@
-package logootsplito;
+package fr.loria.score.logootsplito;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- *
- * @author Stephane Martin <stephane@stephanemartin.fr>
- */
-public class LogootSOpDel<T> extends LogootSOp<T> {
+public class LogootSOpDel<T> implements LogootSOp<T> {
 
-    List<IdentifierInterval> lid;
+    private List<IdentifierInterval> lid;
+
+    public LogootSOpDel() {
+
+    }
 
     public LogootSOpDel(List<IdentifierInterval> lid) {
         this.lid = lid;
     }
 
     @Override
-    public LogootSOp<T> clone() {
+    public LogootSOp<T> clone() throws CloneNotSupportedException {
         return new LogootSOpDel<T>(new LinkedList(lid));
     }
 

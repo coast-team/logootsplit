@@ -1,17 +1,18 @@
-package logootsplito;
+package fr.loria.score.logootsplito;
 
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- *
- * @author Stephane Martin <stephane@stephanemartin.fr>
- */
 public class Identifier implements Comparable, Iterable, Serializable {
 
     List<Integer> base;
     Integer last;
+
+
+    public Identifier() {
+
+    }
 
     /**
      * -1 this< t 0 this=t 1 this > t
@@ -26,14 +27,6 @@ public class Identifier implements Comparable, Iterable, Serializable {
     public Identifier(List<Integer> base, Integer u) {
         this.base = base;
         this.last = u;
-    }
-
-    @Override
-    public int compareTo(Object t) {
-        if (t instanceof Identifier) {
-            return Identifier.compareTo(this.iterator(), ((Identifier) t).iterator());
-        }
-        throw new UnsupportedOperationException("Not supported yet, identifier is not a " + t.getClass().getName());
     }
 
     /**
@@ -66,6 +59,14 @@ public class Identifier implements Comparable, Iterable, Serializable {
         return 0;
     }
 
+    @Override
+    public int compareTo(Object t) {
+        if (t instanceof Identifier) {
+            return Identifier.compareTo(this.iterator(), ((Identifier) t).iterator());
+        }
+        throw new UnsupportedOperationException("Not supported yet, identifier is not a " + t.getClass().getName());
+    }
+
     public List<Integer> getBase() {
         return base;
     }
@@ -77,45 +78,6 @@ public class Identifier implements Comparable, Iterable, Serializable {
     @Override
     public Iterator iterator() {
         return new Iterator_a(base.iterator(), this.last);
-    }
-
-    private static class Iterator_a implements Iterator {
-
-        private Iterator it;
-        private Object more;
-        private Object nexte;
-
-        public Iterator_a(Iterator it, Object more) {
-            this.it = it;
-            this.more = more;
-            loadNext();
-        }
-
-        private void loadNext() {
-            if (it.hasNext()) {
-                nexte = it.next();
-            } else {
-                nexte = more;
-                more = null;
-            }
-        }
-
-        @Override
-        public boolean hasNext() {
-            return nexte != null;
-        }
-
-        @Override
-        public Object next() {
-            Object ret = nexte;
-            loadNext();
-            return ret;
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException("Not supported");
-        }
     }
 
     @Override
@@ -175,8 +137,6 @@ public class Identifier implements Comparable, Iterable, Serializable {
     }
 
     /**
-     *
-     *
      * @param l
      * @param l2
      * @return
@@ -196,5 +156,44 @@ public class Identifier implements Comparable, Iterable, Serializable {
             return max;
         }
 
+    }
+
+    private static class Iterator_a implements Iterator {
+
+        private Iterator it;
+        private Object more;
+        private Object nexte;
+
+        public Iterator_a(Iterator it, Object more) {
+            this.it = it;
+            this.more = more;
+            loadNext();
+        }
+
+        private void loadNext() {
+            if (it.hasNext()) {
+                nexte = it.next();
+            } else {
+                nexte = more;
+                more = null;
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            return nexte != null;
+        }
+
+        @Override
+        public Object next() {
+            Object ret = nexte;
+            loadNext();
+            return ret;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Not supported");
+        }
     }
 }

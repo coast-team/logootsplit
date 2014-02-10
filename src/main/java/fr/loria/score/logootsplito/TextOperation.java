@@ -1,9 +1,5 @@
-package logootsplito;
+package fr.loria.score.logootsplito;
 
-/**
- *
- * @author andre
- */
 public interface TextOperation {
 
     public LogootSOp<Character> applyTo(LogootSDoc<Character> doc);

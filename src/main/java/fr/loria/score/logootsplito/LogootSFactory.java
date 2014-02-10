@@ -1,9 +1,5 @@
-package logootsplito;
+package fr.loria.score.logootsplito;
 
-/**
- *
- * @author oster
- */
 public class LogootSFactory {
 
     public static LogootSDoc<Character> create(int replicaNumber) {
@@ -11,7 +7,5 @@ public class LogootSFactory {
         logootS.setReplicaNumber(replicaNumber);
         return logootS;
     }
-
-    
 
 }

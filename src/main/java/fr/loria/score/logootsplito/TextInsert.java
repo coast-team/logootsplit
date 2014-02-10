@@ -1,4 +1,4 @@
-package logootsplito;
+package fr.loria.score.logootsplito;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class TextInsert implements TextOperation {
     public int getOffset() {
         return this.offset;
     }
-    
+
     public String getContent() {
         return Utils.convertCharactersListToString(this.content);
     }

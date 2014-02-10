@@ -1,35 +1,13 @@
-package logootsplito;
+package fr.loria.score.logootsplito;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Before;
+
+import static org.junit.Assert.assertEquals;
 
 public class ScenarioTest {
-
-    class StringBufferTextDocument implements TextDocument {
-
-        private final StringBuffer state = new StringBuffer();
-
-        @Override
-        public void apply(TextOperation op) {
-            if (op instanceof TextInsert) {
-                TextInsert opIns = (TextInsert) op;
-                state.insert(opIns.getOffset(), opIns.getContent());
-            } else if (op instanceof TextDelete) {
-                TextDelete opDel = (TextDelete) op;
-                state.delete(opDel.getOffset(), opDel.getOffset() + opDel.getLength());
-            } else {
-                throw new UnsupportedOperationException("Unsupported type of TextOperation");
-            }
-        }
-
-        @Override
-        public String toString() {
-            return this.state.toString();
-        }
-
-    }
 
     @Before
     public void setup() {
@@ -103,6 +81,30 @@ public class ScenarioTest {
             doc2.apply(o);
         }
         assertEquals(doc2.toString(), "abc");
+    }
+
+    class StringBufferTextDocument implements TextDocument {
+
+        private final StringBuffer state = new StringBuffer();
+
+        @Override
+        public void apply(TextOperation op) {
+            if (op instanceof TextInsert) {
+                TextInsert opIns = (TextInsert) op;
+                state.insert(opIns.getOffset(), opIns.getContent());
+            } else if (op instanceof TextDelete) {
+                TextDelete opDel = (TextDelete) op;
+                state.delete(opDel.getOffset(), opDel.getOffset() + opDel.getLength());
+            } else {
+                throw new UnsupportedOperationException("Unsupported type of TextOperation");
+            }
+        }
+
+        @Override
+        public String toString() {
+            return this.state.toString();
+        }
+
     }
 
 }

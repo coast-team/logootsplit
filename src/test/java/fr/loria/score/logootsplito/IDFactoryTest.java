@@ -1,14 +1,12 @@
-package logootsplito;
+package fr.loria.score.logootsplito;
+
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
-/**
- *
- * @author Stephane Martin <stephane@stephanemartin.fr>
- */
+import static org.junit.Assert.assertEquals;
+
 public class IDFactoryTest {
 
     @Test

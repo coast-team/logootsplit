@@ -1,23 +1,13 @@
-package logootsplito;
+package fr.loria.score.logootsplito;
 
 import java.util.Iterator;
 
-/**
- *
- * @author Stephane Martin <stephane@stephanemartin.fr>
- */
 public class IteratorHelperIdentifier {
 
     private int nextOffset;
-    private boolean samebase = false;
     private IdentifierInterval id1;
     private IdentifierInterval id2;
-    private Result result = null;
-
-    public static enum Result {
-
-        B1AfterB2, B1BeforeB2, B1InsideB2, B2insideB1, B1concatB2, B2ConcatB1
-    };
+    private Result result;
 
     public IteratorHelperIdentifier(IdentifierInterval id1, IdentifierInterval id2) {
         this.id1 = id1;
@@ -78,5 +68,9 @@ public class IteratorHelperIdentifier {
 
     public int getNextOffset() {
         return nextOffset;
+    }
+
+    public static enum Result {
+        B1AfterB2, B1BeforeB2, B1InsideB2, B2insideB1, B1concatB2, B2ConcatB1
     }
 }

@@ -1,12 +1,8 @@
-package logootsplito;
+package fr.loria.score.logootsplito;
 
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- *
- * @author oster
- */
 public class Utils {
 
     public static List<Character> convertStringToCharactersList(String str) {

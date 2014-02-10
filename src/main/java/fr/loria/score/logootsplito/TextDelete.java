@@ -1,4 +1,4 @@
-package logootsplito;
+package fr.loria.score.logootsplito;
 
 public class TextDelete implements TextOperation {
 
@@ -13,7 +13,7 @@ public class TextDelete implements TextOperation {
     public int getOffset() {
         return this.offset;
     }
-    
+
     public int getLength() {
         return this.length;
     }

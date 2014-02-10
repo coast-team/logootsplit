@@ -1,18 +1,18 @@
-package logootsplito;
+package fr.loria.score.logootsplito;
 
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- *
- * @author Stephane Martin <stephane@stephanemartin.fr>
- */
-public class IdentifierInterval implements Serializable {
+public class IdentifierInterval implements Serializable, Cloneable {
 
     List<Integer> base;
     int begin;
     int end;
+
+    public IdentifierInterval() {
+
+    }
 
     public IdentifierInterval(List<Integer> base, int begin, int end) {
         this.base = base;
@@ -21,7 +21,6 @@ public class IdentifierInterval implements Serializable {
     }
 
     @Override
-    @SuppressWarnings("CloneDoesntCallSuperClone")
     public IdentifierInterval clone() throws CloneNotSupportedException {
         List<Integer> baseCopy = new LinkedList<Integer>(base);
         return new IdentifierInterval(baseCopy, this.begin, this.end);

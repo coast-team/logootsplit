@@ -57,7 +57,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
             l.add(new TextInsert(0, Utils.convertCharactersListToString(str)));
             return l;
         } else {
-           return addBlock(idi, str, root);
+           return addBlock(idi, str, root,0);
         }
        // l2 = new LinkedList();
 
@@ -67,12 +67,12 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
         }*/
     }
 
-    List<TextOperation> addBlock(IdentifierInterval idi, List<T> str, RopesNodes from) {
+    List<TextOperation> addBlock(IdentifierInterval idi, List<T> str, RopesNodes from, int startOffset) {
         LinkedList<RopesNodes> path = new LinkedList();
         LinkedList<RopesNodes> path2;
         List<TextOperation> result = new ArrayList<TextOperation>();
         boolean con = true;
-        int i=0;
+        int i=startOffset;
         while (con) {
             path.add(from);
             IteratorHelperIdentifier ihi = new IteratorHelperIdentifier(idi, from.getIdentifierInterval());
@@ -111,21 +111,28 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
                     //int split2 = maxOffsetBeforeNex(id, node.getIdBegin(), str.size() + id.last - 1);
                     //boolean mod = false;
                     int split2 = /*Math.min(idi.getEnd(), */ ihi.getNextOffset()/*)*/;
+                    
                     List ls = str.subList(0, split2 + 1 - idi.getBegin());
                     IdentifierInterval idi1 = new IdentifierInterval(idi.base, idi.getBegin(), split2);
                     if (from.getLeft() == null) {
                         from.setLeft(new RopesNodes(ls, idi1.getBegin(), getBlock(idi1)));
+                        result.add(new TextInsert(i, Utils.convertCharactersListToString(ls)));
                         //mod = true;
                     } else {
-                        addBlock(idi1, ls, from.getLeft());
+                        result.addAll(addBlock(idi1, ls, from.getLeft(),i));
                     }
+                    
+                    i=i+ls.size();
+                    
                     ls = str.subList(split2 + 1 - idi.getBegin(), str.size());
                     idi1 = new IdentifierInterval(idi.base, split2 + 1, idi.end);
+                    i=i+from.getSizeNodeAndChildren(0)+from.getSize();
                     if (from.getRight() == null) {
                         from.setRight(new RopesNodes(ls, idi1.getBegin(), getBlock(idi1)));
+                        result.add(new TextInsert(i, Utils.convertCharactersListToString(ls)));
                         //mod = true;
                     } else {
-                        addBlock(idi1, ls, from.getRight());
+                        result.addAll(addBlock(idi1, ls, from.getRight(),i));
                     }
                     //if (mod) {
                         con = false;
@@ -142,6 +149,9 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
                         split = from.getIdBegin().minOffsetAfterPrev(path2.getLast().getIdEnd(), idi.getBegin());
                         List l = new ArrayList(str.subList(split + 1 - idi.getBegin(), str.size()));
                         from.appendBegin(l);
+                        result.add(new TextInsert(i, Utils.convertCharactersListToString(l)));
+                        
+                        
                         ascendentUpdate(path, l.size());
                         str = new ArrayList(str.subList(0, split + 1 - idi.getBegin()));
                         idi = new IdentifierInterval(idi.base, idi.begin, split);
@@ -155,6 +165,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
                             //return;
                         }
                     } else {
+                        result.add(new TextInsert(i, Utils.convertCharactersListToString(str)));
                         from.appendBegin(str);
                         ascendentUpdate(path, str.size());
                         con=false;
@@ -173,18 +184,24 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
 
                         split = from.getIdEnd().maxOffsetBeforeNex(path2.getLast().getIdBegin(), idi.getEnd());
                         List l = new ArrayList(str.subList(0, split + 1 - idi.getBegin()));
+                        i=i+from.getSizeNodeAndChildren(0)+from.getSize();
                         from.appendEnd(l);
+                        result.add(new TextInsert(i, Utils.convertCharactersListToString(l)));
+                        
                         ascendentUpdate(path, l.size());
                         str = new ArrayList(str.subList(split + 1 - idi.getBegin(), str.size()));
                         idi = new IdentifierInterval(idi.base, split + 1, idi.end);
                         if (idi.end >= idi.begin) {
                             from = from.getRight();
+                            i=i+l.size();
                         } else {
                             con=false;
                             break;
                             //return;
                         }
                     } else {
+                        i=i+from.getSizeNodeAndChildren(0)+from.getSize();
+                        result.add(new TextInsert(i, Utils.convertCharactersListToString(str)));
                         from.appendEnd(str);
                         ascendentUpdate(path, str.size());
                         con=false;

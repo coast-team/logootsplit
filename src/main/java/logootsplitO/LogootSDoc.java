@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface LogootSDoc<T> extends Document {
 
-    public LogootSDoc<T> copy();
+    public LogootSDoc<T> duplicate(int newReplicaNumber);
 
     public void setReplicaNumber(int i);
     

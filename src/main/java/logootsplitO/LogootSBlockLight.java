@@ -25,14 +25,15 @@ public class LogootSBlockLight<T> extends LogootSBlock<T> implements Serializabl
     public LogootSBlockLight() {
     }
 
-    public LogootSBlockLight<T> clone() {
+    @Override
+    @SuppressWarnings("CloneDoesntCallSuperClone")
+    public LogootSBlockLight<T> clone() throws CloneNotSupportedException {
         return new LogootSBlockLight(id.clone(), this.nbElement);
     }
     
     @Override
     List<T> getElements(int begin, int end) {
-        throw new UnsupportedOperationException("Version light contains no data");
-        
+        throw new UnsupportedOperationException("Version light contains no data");  
     }
 
     @Override

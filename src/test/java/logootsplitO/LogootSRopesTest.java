@@ -53,7 +53,7 @@ public class LogootSRopesTest {
         assertNull(root.getLeft());
         assertNull(root.getRight());
         assertEquals("Hello world", Utils.convertCharactersListToString(root.str));
-        assertEquals(1, root.getHeighOfTree());
+        assertEquals(1, root.getHeightOfTree());
         assertEquals(11, root.getSizeNodeAndChildren());
 
         messages.add(alg1.insert(0, "---"));
@@ -62,7 +62,7 @@ public class LogootSRopesTest {
         assertNull(root.getLeft());
         assertNull(root.getRight());
         assertEquals("---Hello world", Utils.convertCharactersListToString(root.str));
-        assertEquals(1, root.getHeighOfTree());
+        assertEquals(1, root.getHeightOfTree());
         assertEquals(14, root.getSizeNodeAndChildren());
 
         // Apply to other sites
@@ -71,7 +71,7 @@ public class LogootSRopesTest {
         assertEquals("Hello", alg2.lookup());
         LogootSRopes<Character> doc2 = (LogootSRopes<Character>) alg2.getDoc();
         root = doc2.root;
-        assertEquals(1, root.getHeighOfTree());
+        assertEquals(1, root.getHeightOfTree());
         assertEquals(5, root.getSizeNodeAndChildren());
         assertEquals("Hello", Utils.convertCharactersListToString(root.str));
         assertNull(root.getLeft());
@@ -82,7 +82,7 @@ public class LogootSRopesTest {
         assertEquals("Hello world", alg2.lookup());
         doc2 = (LogootSRopes<Character>) alg2.getDoc();
         root = doc2.root;
-        assertEquals(1, root.getHeighOfTree());
+        assertEquals(1, root.getHeightOfTree());
         assertEquals(11, root.getSizeNodeAndChildren());
         assertEquals("Hello world", Utils.convertCharactersListToString(root.str));
         assertNull(root.getLeft());
@@ -93,7 +93,7 @@ public class LogootSRopesTest {
         assertEquals("---Hello world", alg2.lookup());
         doc2 = (LogootSRopes<Character>) alg2.getDoc();
         root = doc2.root;
-        assertEquals(1, root.getHeighOfTree());
+        assertEquals(1, root.getHeightOfTree());
         assertEquals(14, root.getSizeNodeAndChildren());
         assertEquals("---Hello world", Utils.convertCharactersListToString(root.str));
         assertNull(root.getLeft());
@@ -133,11 +133,11 @@ public class LogootSRopesTest {
         LogootSRopes.RopesNodes prev = root.getLeft();
         assertEquals(" world", Utils.convertCharactersListToString(root.str));
         assertEquals("Hello", Utils.convertCharactersListToString(prev.str));
-        assertEquals(2, root.getHeighOfTree());
-        assertEquals(1, prev.getHeighOfTree());
+        assertEquals(2, root.getHeightOfTree());
+        assertEquals(1, prev.getHeightOfTree());
         assertEquals(11, root.getSizeNodeAndChildren());
         assertEquals(5, prev.getSizeNodeAndChildren());
-        assertEquals(1, prev.getHeighOfTree());
+        assertEquals(1, prev.getHeightOfTree());
         assertEquals(6, root.getSize());
         assertEquals(5, prev.getSize());
 
@@ -146,9 +146,9 @@ public class LogootSRopesTest {
         root = doc.root;
         LogootSRopes.RopesNodes next = root.getRight();
         LogootSRopes.RopesNodes previous = root.getLeft();
-        assertEquals(2, root.getHeighOfTree());
-        assertEquals(1, next.getHeighOfTree());
-        assertEquals(1, previous.getHeighOfTree());
+        assertEquals(2, root.getHeightOfTree());
+        assertEquals(1, next.getHeightOfTree());
+        assertEquals(1, previous.getHeightOfTree());
         assertEquals(23, root.getSizeNodeAndChildren());
         assertEquals(12, next.getSizeNodeAndChildren());
         assertEquals(5, previous.getSizeNodeAndChildren());
@@ -163,9 +163,9 @@ public class LogootSRopesTest {
         root = ((LogootSRopes<Character>) alg2.getLDoc()).root;
         next = root.getRight();
         previous = root.getLeft();
-        assertEquals(2, root.getHeighOfTree());
-        assertEquals(1, next.getHeighOfTree());
-        assertEquals(1, previous.getHeighOfTree());
+        assertEquals(2, root.getHeightOfTree());
+        assertEquals(1, next.getHeightOfTree());
+        assertEquals(1, previous.getHeightOfTree());
         assertEquals(23, root.getSizeNodeAndChildren());
         assertEquals(12, next.getSizeNodeAndChildren());
         assertEquals(5, previous.getSizeNodeAndChildren());
@@ -316,15 +316,15 @@ public class LogootSRopesTest {
             ret = false;
 
         }
-        nodeinsub = 1 + Math.max(node.getSubtreeHeigh(0), node.getSubtreeHeigh(1));
-        if (node.getHeighOfTree() != nodeinsub) {
-            System.err.println("error height : " + node.getHeighOfTree() + "<>" + nodeinsub + " " + list);
+        nodeinsub = 1 + Math.max(node.getSubtreeHeight(0), node.getSubtreeHeight(1));
+        if (node.getHeightOfTree() != nodeinsub) {
+            System.err.println("error height : " + node.getHeightOfTree() + "<>" + nodeinsub + " " + list);
             ret = false;
         }
 
         int bal = node.balanceScore();
         if (Math.abs(bal) > 1) {
-            System.err.println("Balance broken " + bal + ":" + node.getSubtreeHeigh(1) + " vs " + node.getSubtreeHeigh(0) + " " + list);
+            System.err.println("Balance broken " + bal + ":" + node.getSubtreeHeight(1) + " vs " + node.getSubtreeHeight(0) + " " + list);
             ret = false;
         }
         list.removeLast();

@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -789,16 +792,35 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
 
     @Override
     public LogootSDoc<T> duplicate(int newReplicaNumber) {
-       LogootSRopes<T> copy = new LogootSRopes<T>();
-       
-       copy.root = copy(root);
-       mapBaseToBlock = copy(mapBaseToBlock);
-       
-       
-       
-       
-       copy.setReplicaNumber(newReplicaNumber);
+        try {
+            LogootSRopes<T> copy = this.clone();
+            copy.setReplicaNumber(newReplicaNumber);
+            copy.clock = 0;
+            return copy;
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(LogootSRopes.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
+        }
     }
+    
+    @Override
+    @SuppressWarnings("CloneDoesntCallSuperClone")
+    public LogootSRopes<T> clone() throws CloneNotSupportedException {
+        LogootSRopes<T> copy = new LogootSRopes<T>();
+        copy.replicatNumber = this.replicatNumber;
+        copy.clock = this.clock;
+        copy.root = this.root.clone();
+        
+        copy.mapBaseToBlock = new HashMap<List<Integer>, LogootSBlockLight>(); // to be cloned        
+        for (Map.Entry<List<Integer>, LogootSBlockLight> e : this.mapBaseToBlock.entrySet()) {
+            List<Integer> key = new LinkedList<Integer>(e.getKey()); // 
+            LogootSBlockLight value = e.getValue().clone();
+            copy.mapBaseToBlock.put(key, value);
+        }
+
+        return copy;
+    }
+    
 
     @Override
     public void setReplicaNumber(int i) {
@@ -909,20 +931,19 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
         }
 
         
-        public RopesNodes<T> clone() {            
+        @Override
+        @SuppressWarnings("CloneDoesntCallSuperClone")
+        public RopesNodes<T> clone() throws CloneNotSupportedException {            
             List<T> strCopy = new ArrayList<T>();
             for (T t: str) {
                 strCopy.add(t); // do not need to clone 't' since it is an atom (which is never modified)
-            }
-            
+            }            
             RopesNodes<T> copy = new RopesNodes<T>(strCopy, this.offset, this.block.clone());
-            
-           /* to be copies
-            private RopesNodes[] childrenLeftRight = new RopesNodes[2];
-        private int height = 1;
-        private int sizeNodeAndChildren = 0;
-            */
-            
+            copy.sizeNodeAndChildren = this.sizeNodeAndChildren;
+            copy.height = this.height;
+            copy.childrenLeftRight[LEFT] = this.childrenLeftRight[LEFT].clone();
+            copy.childrenLeftRight[RIGHT] = this.childrenLeftRight[RIGHT].clone();
+                        
             return copy;
         }
 
@@ -1024,11 +1045,11 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
         }
 
         public void sumDirectChildren() {
-            height = Math.max(getSubtreeHeigh(LEFT), getSubtreeHeigh(RIGHT)) + 1;
+            height = Math.max(getSubtreeHeight(LEFT), getSubtreeHeight(RIGHT)) + 1;
             sizeNodeAndChildren = getSizeNodeAndChildren(LEFT) + getSizeNodeAndChildren(RIGHT) + str.size();
         }
 
-        public int getSubtreeHeigh(int i) {
+        public int getSubtreeHeight(int i) {
             RopesNodes s = childrenLeftRight[i];
             return s == null ? 0 : s.height;
         }
@@ -1038,13 +1059,15 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
             return s == null ? 0 : s.sizeNodeAndChildren;
         }
 
-        public int getHeighOfTree() {
+        public int getHeightOfTree() {
             return height;
         }
 
+        /*
         public void setChildrens(int childrens) {
             this.height = childrens;
         }
+        */
 
         public int getSizeNodeAndChildren() {
             return sizeNodeAndChildren;
@@ -1059,7 +1082,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
         }
 
         public int balanceScore() {
-            return getSubtreeHeigh(RIGHT) - getSubtreeHeigh(LEFT);
+            return getSubtreeHeight(RIGHT) - getSubtreeHeight(LEFT);
         }
 
         public void become(RopesNodes node) {

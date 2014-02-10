@@ -1,7 +1,7 @@
 package logootsplitO;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -20,8 +20,10 @@ public class IdentifierInterval implements Serializable {
         this.end = end;
     }
 
-    public IdentifierInterval clone() {
-        List<Integer> baseCopy = new ArrayList<Integer>(base);
+    @Override
+    @SuppressWarnings("CloneDoesntCallSuperClone")
+    public IdentifierInterval clone() throws CloneNotSupportedException {
+        List<Integer> baseCopy = new LinkedList<Integer>(base);
         return new IdentifierInterval(baseCopy, this.begin, this.end);
     }
     

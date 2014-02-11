@@ -84,10 +84,10 @@ public class SerializationTest {
     }
 
     @Test
-    public void serializeLogootSBlockLight() {
+    public void serializeLogootSBlock() {
         IdentifierInterval iid = new IdentifierInterval(Arrays.asList(new Integer[]{1, 2, 3, 4}), new Integer(7), new Integer(9));
-        LogootSBlockLight block = new LogootSBlockLight(iid, 5);
-        LogootSBlockLight blockAfterSerialization = SerializationUtils.serializeAndDeserialize(block);
+        LogootSBlock block = new LogootSBlock(iid, 5);
+        LogootSBlock blockAfterSerialization = SerializationUtils.serializeAndDeserialize(block);
 
         assertThat(block.id, allOf(not(sameInstance(blockAfterSerialization.id)), equalTo(blockAfterSerialization.id)));
         assertEquals(block.mine, blockAfterSerialization.mine);

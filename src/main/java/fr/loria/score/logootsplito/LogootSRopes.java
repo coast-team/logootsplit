@@ -28,7 +28,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
     int replicaNumber = 0;
     int clock = 0;
     RopesNodes root = null;
-    private HashMap<List<Integer>, LogootSBlockLight> mapBaseToBlock = new HashMap<List<Integer>, LogootSBlockLight>();
+    private HashMap<List<Integer>, LogootSBlock> mapBaseToBlock = new HashMap<List<Integer>, LogootSBlock>();
 
 
     public LogootSRopes() {
@@ -36,14 +36,14 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
     }
 
 
-    HashMap<List<Integer>, LogootSBlockLight> getMapBaseToBlock() {
+    HashMap<List<Integer>, LogootSBlock> getMapBaseToBlock() {
         return mapBaseToBlock;
     }
 
-    public LogootSBlockLight getBlock(IdentifierInterval id) {
-        LogootSBlockLight ret = mapBaseToBlock.get(id.base);
+    public LogootSBlock getBlock(IdentifierInterval id) {
+        LogootSBlock ret = mapBaseToBlock.get(id.base);
         if (ret == null) {
-            ret = new LogootSBlockLight<String>(id);
+            ret = new LogootSBlock<String>(id);
             mapBaseToBlock.put(id.base, ret);
         }
         return ret;
@@ -54,7 +54,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
         List<TextOperation> l = new ArrayList<TextOperation>();
         IdentifierInterval idi = new IdentifierInterval(id.base, id.last, id.last + str.size() - 1);
         if (root == null) {
-            LogootSBlockLight bl = new LogootSBlockLight(idi);
+            LogootSBlock bl = new LogootSBlock(idi);
             mapBaseToBlock.put(bl.id.base, bl);
             root = new RopesNodes(str, id.getLast(), bl);
             l.add(new TextInsert(0, Utils.convertCharactersListToString(str)));
@@ -219,7 +219,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
     RopesNodes mkNode(Identifier id1, Identifier id2, List l) {
         List<Integer> base = IDFactory.createBetweenPosition(id1, id2, replicaNumber, clock++);
         IdentifierInterval idi = new IdentifierInterval(base, 0, l.size() - 1);
-        LogootSBlockLight newBlock = new LogootSBlockLight(idi);
+        LogootSBlock newBlock = new LogootSBlock(idi);
         mapBaseToBlock.put(idi.base, newBlock);
         return new RopesNodes(l, 0, newBlock);
     }
@@ -600,10 +600,10 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
     public LogootSRopes<T> clone() throws CloneNotSupportedException {
         LogootSRopes<T> o = (LogootSRopes<T>) super.clone();
         o.root = root.clone();
-        o.mapBaseToBlock = new HashMap<List<Integer>, LogootSBlockLight>();
-        for (Map.Entry<List<Integer>, LogootSBlockLight> e : this.mapBaseToBlock.entrySet()) {
+        o.mapBaseToBlock = new HashMap<List<Integer>, LogootSBlock>();
+        for (Map.Entry<List<Integer>, LogootSBlock> e : this.mapBaseToBlock.entrySet()) {
             List<Integer> key = new LinkedList<Integer>(e.getKey()); // 
-            LogootSBlockLight value = e.getValue().clone();
+            LogootSBlock value = e.getValue().clone();
             o.mapBaseToBlock.put(key, value);
         }
 
@@ -658,7 +658,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
         public static final int RIGHT = 1;
         int offset;
         List<T> str;
-        LogootSBlockLight<String> block;
+        LogootSBlock<String> block;
         private RopesNodes[] childrenLeftRight = new RopesNodes[2];
         private int height = 1;
         private int sizeNodeAndChildren = 0;
@@ -667,11 +667,11 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
 
         }
 
-        public RopesNodes(List<T> str, int offset, LogootSBlockLight block) {
+        public RopesNodes(List<T> str, int offset, LogootSBlock block) {
             this(str, offset, block, true);
         }
 
-        public RopesNodes(List<T> str, int offset, LogootSBlockLight block, boolean newer) {
+        public RopesNodes(List<T> str, int offset, LogootSBlock block, boolean newer) {
             this.str = new ArrayList(str);
             this.block = block;
             this.offset = offset;

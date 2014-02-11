@@ -21,7 +21,9 @@ package fr.loria.score.logootsplito;
 import java.io.Serializable;
 import java.util.List;
 
-public abstract class LogootSBlock<T> implements Serializable, Cloneable {
+public class LogootSBlock<T> implements Serializable, Cloneable {
+
+    int nbElement = 0;
     IdentifierInterval id;
     boolean mine = false;
 
@@ -29,8 +31,21 @@ public abstract class LogootSBlock<T> implements Serializable, Cloneable {
 
     }
 
+    public LogootSBlock(IdentifierInterval id, int list) {
+        this.id = id;
+        nbElement = list;
+    }
+
     public LogootSBlock(IdentifierInterval id) {
         this.id = id;
+    }
+
+    public IdentifierInterval getId() {
+        return id;
+    }
+
+    public int numberOfElements() {
+        return nbElement;
     }
 
     public boolean isMine() {
@@ -41,24 +56,28 @@ public abstract class LogootSBlock<T> implements Serializable, Cloneable {
         this.mine = mine;
     }
 
-    abstract int numberOfElements();
+    public void addBlock(int pos, List<T> contains) {
+        nbElement += contains.size();
+        this.getId().begin = Math.min(this.getId().begin, pos);
+        this.getId().end = Math.max(this.getId().end, pos + contains.size() - 1);
 
-    abstract List<T> getElements(int begin, int end);
-
-    abstract T getElement(int i);
-
-    abstract void addBlock(int pos, List<T> contains);
-
-    abstract void delBlock(int begin, int end, int nbElement);
-
-    IdentifierInterval getId() {
-        return id;
     }
 
+    public void delBlock(int begin, int end, int nbElement) {
+        this.nbElement -= nbElement;
+    }
+
+    @Override
     public LogootSBlock<T> clone() throws CloneNotSupportedException {
         LogootSBlock<T> o = (LogootSBlock<T>) super.clone();
-        o.id = id.clone();
+        o.id = this.id.clone();
+
         return o;
+    }
+
+    @Override
+    public String toString() {
+        return "{" + nbElement + "," + this.id + (isMine() ? "mine" : "its") + "}";
     }
 
 }

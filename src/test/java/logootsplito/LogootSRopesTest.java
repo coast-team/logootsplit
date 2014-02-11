@@ -359,11 +359,21 @@ public class LogootSRopesTest {
 
         assertEquals("Tes34", alg1.lookup());
 
-        alg2.applyRemote(op4);
+        lop = alg2.applyRemote(op4);
+        assertEquals(1,lop.size());
+        
+        td= (TextDelete) lop.get(0);
+        assertEquals(3,td.getOffset());
+        assertEquals(1,td.getLength());
 
         assertEquals("Tes34", alg2.lookup());
 
-        alg3.applyRemote(op4);
+        lop = alg3.applyRemote(op4);
+        assertEquals(1,lop.size());
+        
+        td= (TextDelete) lop.get(0);
+        assertEquals(3,td.getOffset());
+        assertEquals(1,td.getLength());
 
         assertEquals("Tes34", alg3.lookup());
         
@@ -373,10 +383,34 @@ public class LogootSRopesTest {
 
         LogootSOp op6 = alg2.insert(3, "jiji");
 
-        alg1.applyRemote(op6);
-        alg1.applyRemote(op5);
-        alg2.applyRemote(op5);
-        alg3.applyRemote(op6);
+        lop = alg1.applyRemote(op6);
+        assertEquals(1,lop.size());
+        
+        ti= (TextInsert) lop.get(0);
+        assertEquals("jiji",ti.getContent());
+        assertEquals(3,ti.getOffset());
+        
+        lop = alg1.applyRemote(op5);
+        assertEquals(1,lop.size());
+        
+        ti= (TextInsert) lop.get(0);
+        assertEquals("toto",ti.getContent());
+        assertEquals(2,ti.getOffset());
+        
+        lop = alg2.applyRemote(op5);
+        assertEquals(1,lop.size());
+        
+        ti= (TextInsert) lop.get(0);
+        assertEquals("toto",ti.getContent());
+        assertEquals(2,ti.getOffset());
+        
+        lop = alg3.applyRemote(op6);
+        assertEquals(1,lop.size());
+        
+        ti= (TextInsert) lop.get(0);
+        assertEquals("jiji",ti.getContent());
+        assertEquals(7,ti.getOffset());
+        
 
         assertTrue(scoreChecks(alg1, alg2, alg3));
         assertEquals(alg1.lookup(), alg2.lookup());

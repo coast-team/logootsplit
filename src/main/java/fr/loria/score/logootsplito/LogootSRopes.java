@@ -99,7 +99,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
                     split = Math.min(from.maxOffset(), ihi.getNextOffset());
                     RopesNodes rp = new RopesNodes(str, idi.getBegin(), getBlock(idi));
                     path.add(from.split(split - from.offset + 1, rp));
-                    result.add(new TextInsert(i + split - from.offset, Utils.convertCharactersListToString(str)));
+                    result.add(new TextInsert(i+split-from.offset+1, Utils.convertCharactersListToString(str)));
                     con = false;
                     break;
                 case B2insideB1: // split b1 the node to insert
@@ -114,7 +114,8 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
                         result.addAll(addBlock(idi1, ls, from.getLeft(), i));
                     }
 
-                    i = i + ls.size();
+                    
+                    //i=i+ls.size();
 
                     ls = str.subList(split2 + 1 - idi.getBegin(), str.size());
                     idi1 = new IdentifierInterval(idi.base, split2 + 1, idi.end);

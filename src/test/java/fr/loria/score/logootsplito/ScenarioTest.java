@@ -36,7 +36,7 @@ public class ScenarioTest {
     public void scenarioBasicAdd() {
         LogootSDoc<Character> logootS1 = LogootSFactory.create(12);
         TextOperation insert = new TextInsert(2, "abc");
-        LogootSOp<Character> op = insert.applyTo(logootS1);
+        LogootSOperation<Character> op = insert.applyTo(logootS1);
 
         LogootSDoc<Character> logootS2 = LogootSFactory.create(14);
         List<TextOperation> ops = op.execute(logootS2);
@@ -55,7 +55,7 @@ public class ScenarioTest {
     public void scenarioBasicDel() {
         LogootSDoc<Character> logootS1 = LogootSFactory.create(12);
         TextOperation insert = new TextInsert(2, "abc");
-        LogootSOp<Character> op = insert.applyTo(logootS1);
+        LogootSOperation<Character> op = insert.applyTo(logootS1);
 
         LogootSDoc<Character> logootS2 = LogootSFactory.create(14);
         List<TextOperation> ops = op.execute(logootS2);
@@ -86,7 +86,7 @@ public class ScenarioTest {
     public void scenarioAddAndSplit() {
         LogootSDoc<Character> logootS1 = LogootSFactory.create(12);
         TextOperation insert = new TextInsert(2, "abc");
-        LogootSOp<Character> op = insert.applyTo(logootS1);
+        LogootSOperation<Character> op = insert.applyTo(logootS1);
 
         LogootSDoc<Character> logootS2 = LogootSFactory.create(14);
         List<TextOperation> ops = op.execute(logootS2);

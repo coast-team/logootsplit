@@ -18,37 +18,49 @@
  */
 package fr.loria.score.logootsplito;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class LogootSOpAdd<T> implements LogootSOp<T> {
-    Identifier id;
-    List<T> l;
+public class LogootSDel<T> implements LogootSOperation<T> {
 
-    public LogootSOpAdd() {
+    private List<IdentifierInterval> lid;
+
+    public LogootSDel() {
+
     }
 
-    public LogootSOpAdd(Identifier id, List<T> l) {
-        this.id = id;
-        this.l = l;
+    public LogootSDel(List<IdentifierInterval> lid) {
+        this.lid = lid;
+    }
+
+    public List<IdentifierInterval> getLid() {
+        return this.lid;
     }
 
     @Override
-    public LogootSOpAdd<T> clone() throws CloneNotSupportedException {
-        LogootSOpAdd<T> o = (LogootSOpAdd<T>) super.clone();
-        o.id = id.clone();
-        o.l = new LinkedList<T>(l);
+    public LogootSDel<T> clone() throws CloneNotSupportedException {
+        LogootSDel<T> o = (LogootSDel<T>) super.clone();
+        o.lid = new LinkedList();
+
+        for (IdentifierInterval id : this.lid) {
+            o.lid.add(id.clone());
+        }
         return o;
     }
 
     @Override
     public List<TextOperation> execute(LogootSDoc<T> doc) {
-        return doc.addBlock(id, l);
+        List l = new ArrayList<TextOperation>();
+        for (IdentifierInterval id : lid) {
+            l.addAll(doc.delBlock(id));
+        }
+        return l;
     }
 
     @Override
     public String toString() {
-        return "LogootSOpAdd{" + "id=" + id + ", l=" + l + '}';
+        return "LogootSDel{" + "lid=" + lid + '}';
     }
 
 }

@@ -26,9 +26,9 @@ public interface LogootSDoc<T> {
 
     public void setReplicaNumber(int i);
 
-    public LogootSOp insertLocal(int pos, List<T> l);
+    public LogootSOperation insertLocal(int pos, List<T> l);
 
-    public LogootSOp delLocal(int begin, int end);
+    public LogootSOperation delLocal(int begin, int end);
 
     public List<TextOperation> addBlock(Identifier id, List<T> l);
 

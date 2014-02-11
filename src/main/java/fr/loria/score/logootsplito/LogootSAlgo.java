@@ -41,15 +41,15 @@ public class LogootSAlgo {
         return this.doc.view();
     }
 
-    public LogootSOp insert(int position, String content) {
+    public LogootSOperation insert(int position, String content) {
         return (new TextInsert(position, content)).applyTo(this.doc);
     }
 
-    public LogootSOp remove(int position, int length) {
+    public LogootSOperation remove(int position, int length) {
         return (new TextDelete(position, length)).applyTo(this.doc);
     }
 
-    public List<TextOperation> applyRemote(LogootSOp op) {
+    public List<TextOperation> applyRemote(LogootSOperation op) {
         return op.execute(this.doc);
     }
 }

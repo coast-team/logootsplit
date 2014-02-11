@@ -18,12 +18,37 @@
  */
 package fr.loria.score.logootsplito;
 
-import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
-public interface LogootSOp<T> extends Serializable, Cloneable {
+public class LogootSAdd<T> implements LogootSOperation<T> {
+    Identifier id;
+    List<T> l;
 
-    public LogootSOp<T> clone() throws CloneNotSupportedException;
+    public LogootSAdd() {
+    }
 
-    public List<TextOperation> execute(LogootSDoc<T> doc);
+    public LogootSAdd(Identifier id, List<T> l) {
+        this.id = id;
+        this.l = l;
+    }
+
+    @Override
+    public LogootSAdd<T> clone() throws CloneNotSupportedException {
+        LogootSAdd<T> o = (LogootSAdd<T>) super.clone();
+        o.id = id.clone();
+        o.l = new LinkedList<T>(l);
+        return o;
+    }
+
+    @Override
+    public List<TextOperation> execute(LogootSDoc<T> doc) {
+        return doc.addBlock(id, l);
+    }
+
+    @Override
+    public String toString() {
+        return "LogootSAdd{" + "id=" + id + ", l=" + l + '}';
+    }
+
 }

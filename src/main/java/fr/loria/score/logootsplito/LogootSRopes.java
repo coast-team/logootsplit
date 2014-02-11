@@ -226,11 +226,11 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
     //Todo: improve readability with search function
 
     @Override
-    public LogootSOp insertLocal(int pos, List l) {
+    public LogootSOperation insertLocal(int pos, List l) {
         if (root == null) {//empty tree
             root = mkNode(null, null, l);
             root.block.setMine(true);
-            return new LogootSOpAdd(root.getIdBegin(), l);
+            return new LogootSAdd(root.getIdBegin(), l);
         } else {
             RopesNodes newNode;
             int length = this.viewLength();
@@ -242,7 +242,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
                 if (n.isAppendableBefore()) {
                     Identifier id = n.appendBegin(l);
                     ascendentUpdate(path, l.size());
-                    return new LogootSOpAdd(id, l);
+                    return new LogootSAdd(id, l);
                 } else {//add node
                     newNode = mkNode(null, n.getIdBegin(), l);
                     newNode.block.setMine(true);
@@ -255,7 +255,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
                 if (n.isAppendableAfter()) {//append
                     Identifier id = n.appendEnd(l);
                     ascendentUpdate(path, l.size());
-                    return new LogootSOpAdd(id, l);
+                    return new LogootSAdd(id, l);
                 } else {//add at end
                     newNode = mkNode(n.getIdEnd(), null, l);
                     newNode.block.setMine(true);
@@ -277,14 +277,14 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
                         Identifier id = inPos.getNode().appendBegin(l);
                         ascendentUpdate(inPos.path, l.size());
 
-                        return new LogootSOpAdd(id, l);
+                        return new LogootSAdd(id, l);
                     } else {
 
                         if (prev.getNode().isAppendableAfter() && prev.getNode().getIdEnd().hasPlaceAfter(inPos.getNode().getIdBegin(), l.size())) {//append after
                             Identifier id = prev.getNode().appendEnd(l);
                             ascendentUpdate(prev.path, l.size());
 
-                            return new LogootSOpAdd(id, l);
+                            return new LogootSAdd(id, l);
                         } else {
                             newNode = mkNode(prev.getNode().getIdEnd(), inPos.getNode().getIdBegin(), l);
                             newNode.block.setMine(true);
@@ -298,7 +298,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
             }
             balance(path);
 
-            return new LogootSOpAdd(newNode.getIdBegin(), l);
+            return new LogootSAdd(newNode.getIdBegin(), l);
         }
     }
 
@@ -367,7 +367,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
     }
 
     @Override
-    public LogootSOp delLocal(int begin, int end) {
+    public LogootSOperation delLocal(int begin, int end) {
         int length = end - begin + 1;
         List<IdentifierInterval> li = new LinkedList<IdentifierInterval>();
         do {
@@ -391,7 +391,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
             }
         } while (length > 0);
 
-        return new LogootSOpDel(li);
+        return new LogootSDel(li);
     }
 
     void delNode(LinkedList<RopesNodes> path) {

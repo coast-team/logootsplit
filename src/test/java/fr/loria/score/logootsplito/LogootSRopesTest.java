@@ -107,7 +107,7 @@ public class LogootSRopesTest {
 
     @Test
     public void simpleAddMergeCheck() throws Exception {
-        LinkedList<LogootSOp> messages = new LinkedList<LogootSOp>();
+        LinkedList<LogootSOperation> messages = new LinkedList<LogootSOperation>();
         messages.add(alg1.insert(0, "Hello"));
 
         assertEquals("Hello", alg1.lookup());
@@ -182,7 +182,7 @@ public class LogootSRopesTest {
 
     @Test
     public void testTest() throws Exception {
-        LinkedList<LogootSOp> messages = new LinkedList();
+        LinkedList<LogootSOperation> messages = new LinkedList();
         List<TextOperation> lop;
         TextInsert ti;
         messages.add(alg3.insert(0, " world"));
@@ -198,9 +198,9 @@ public class LogootSRopesTest {
 
         LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
         LinkedList<RopesNodes> lp = new LinkedList<RopesNodes>();
-        doc.searchFull(doc.root, ((LogootSOpAdd<Character>) messages.getLast()).id, lp);
+        doc.searchFull(doc.root, ((LogootSAdd<Character>) messages.getLast()).id, lp);
         assertTrue(lp.size() > 0);
-        doc.searchFull(doc.root, ((LogootSOpAdd<Character>) messages.getLast()).id, lp);
+        doc.searchFull(doc.root, ((LogootSAdd<Character>) messages.getLast()).id, lp);
         lp.clear();
         assertFalse(doc.searchFull(doc.root, new Identifier(Arrays.asList(0, 0, 0, 0, 0), 42), lp));
         assertEquals(lp.size(), 0);
@@ -208,7 +208,7 @@ public class LogootSRopesTest {
 
     @Test
     public void simpleAddCheck() throws Exception {
-        LinkedList<LogootSOp> messages = new LinkedList();
+        LinkedList<LogootSOperation> messages = new LinkedList();
         List<TextOperation> lop;
         TextInsert ti;
         messages.add(alg3.insert(0, " world"));
@@ -289,7 +289,7 @@ public class LogootSRopesTest {
         TextInsert ti;
         TextDelete td;
         
-        LogootSOp p = alg3.insert(0, "abcd");
+        LogootSOperation p = alg3.insert(0, "abcd");
         
         lop = alg2.applyRemote(p);
         assertEquals(1,lop.size());
@@ -305,8 +305,8 @@ public class LogootSRopesTest {
 
         assertEquals("abcd", alg2.lookup());
 
-        LogootSOp p2 = alg2.remove(0, 2);
-        LogootSOp p3 = alg2.remove(0, 2);
+        LogootSOperation p2 = alg2.remove(0, 2);
+        LogootSOperation p3 = alg2.remove(0, 2);
 
         
         lop = alg1.applyRemote(p2);
@@ -349,16 +349,16 @@ public class LogootSRopesTest {
         TextInsert ti;
         TextDelete td;
         
-        LogootSOp op1 = alg1.insert(0, "Test1234");
+        LogootSOperation op1 = alg1.insert(0, "Test1234");
 
         assertEquals("Test1234", alg1.lookup());
         assertTrue(scoreChecks(alg1, alg2, alg3));
 
-        LogootSOp op2 = alg1.insert(5, "haha");
+        LogootSOperation op2 = alg1.insert(5, "haha");
 
         assertEquals("Test1haha234", alg1.lookup());
-        assertEquals("[T, e, s, t, 1, 2, 3, 4]", ((LogootSOpAdd<Character>) op1).l.toString());
-        assertEquals("[h, a, h, a]", ((LogootSOpAdd<Character>) op2).l.toString());
+        assertEquals("[T, e, s, t, 1, 2, 3, 4]", ((LogootSAdd<Character>) op1).l.toString());
+        assertEquals("[h, a, h, a]", ((LogootSAdd<Character>) op2).l.toString());
         assertTrue(scoreChecks(alg1, alg2, alg3));
 
         alg2.applyRemote(op2);
@@ -399,7 +399,7 @@ public class LogootSRopesTest {
         assertTrue(scoreChecks(alg1, alg2, alg3));
 
         // Del
-        LogootSOp op3 = alg3.remove(4, 6);
+        LogootSOperation op3 = alg3.remove(4, 6);
 
         assertEquals("Test34", alg3.lookup());
 
@@ -423,7 +423,7 @@ public class LogootSRopesTest {
         // Another Del
         assertEquals("Test1haha234", alg1.lookup());
 
-        LogootSOp op4 = alg1.remove(3, 4);
+        LogootSOperation op4 = alg1.remove(3, 4);
 
         assertEquals("Tesha234", alg1.lookup());
 
@@ -459,11 +459,11 @@ public class LogootSRopesTest {
 
         assertEquals("Tes34", alg3.lookup());
 
-        LogootSOp op5 = alg3.insert(2, "toto");
+        LogootSOperation op5 = alg3.insert(2, "toto");
 
         assertTrue(scoreChecks(alg1, alg2, alg3));
 
-        LogootSOp op6 = alg2.insert(3, "jiji");
+        LogootSOperation op6 = alg2.insert(3, "jiji");
 
         lop = alg1.applyRemote(op6);
         assertEquals(1,lop.size());
@@ -527,7 +527,7 @@ public class LogootSRopesTest {
     @Test
     public void testConcurrentDelete() throws Exception {
         String content = "abcdefghij";
-        LogootSOp m1 = alg1.insert(0, content);
+        LogootSOperation m1 = alg1.insert(0, content);
         assertEquals(content, alg1.lookup());
         alg1.insert(2, "2");
         assertEquals("ab2cdefghij", alg1.lookup());
@@ -536,7 +536,7 @@ public class LogootSRopesTest {
 
         alg2.applyRemote(m1);
         assertEquals(content, alg2.lookup());
-        LogootSOp m2 = alg2.remove(1, 8);
+        LogootSOperation m2 = alg2.remove(1, 8);
         assertEquals("aj", alg2.lookup());
         alg1.applyRemote(m2);
         assertEquals("a27j", alg1.lookup());
@@ -544,9 +544,9 @@ public class LogootSRopesTest {
 
     @Test
     public void testAppending() throws Exception {
-        LogootSOp op1 = alg1.insert(0, "Test1234");
-        LogootSOp op2 = alg1.insert(8, "la suite");
-        LogootSOp op3 = alg1.insert(0, "before");
+        LogootSOperation op1 = alg1.insert(0, "Test1234");
+        LogootSOperation op2 = alg1.insert(8, "la suite");
+        LogootSOperation op3 = alg1.insert(0, "before");
 
         assertEquals("beforeTest1234la suite", alg1.lookup());
 
@@ -567,13 +567,13 @@ public class LogootSRopesTest {
 
     @Test
     public void testConflictAppendInside() throws Exception {
-        LogootSOpAdd m1 = (LogootSOpAdd) alg1.insert(0, "toto");
-        LogootSOpAdd m2 = (LogootSOpAdd) alg1.insert(4, "hihi");
+        LogootSAdd m1 = (LogootSAdd) alg1.insert(0, "toto");
+        LogootSAdd m2 = (LogootSAdd) alg1.insert(4, "hihi");
         List<Integer> base = new LinkedList(m1.id.base);
         base.add(5);
         base.add(5);
         Identifier id = new Identifier(base, 6);
-        LogootSOp m3 = new LogootSOpAdd(id, Arrays.asList('k', 'o', 'k', 'o'));
+        LogootSOperation m3 = new LogootSAdd(id, Arrays.asList('k', 'o', 'k', 'o'));
         alg1.applyRemote(m3);
         assertEquals("totohikokohi", alg1.lookup());
         alg2.applyRemote(m1);
@@ -585,14 +585,14 @@ public class LogootSRopesTest {
 
     @Test
     public void testConflictAppendB2concatB1() throws Exception {
-        LogootSOpAdd m0 = (LogootSOpAdd) alg1.insert(0, "yoyo");
-        LogootSOpAdd m1 = (LogootSOpAdd) alg3.insert(0, "toto");
-        LogootSOpAdd m2 = (LogootSOpAdd) alg3.insert(4, "hihi");
+        LogootSAdd m0 = (LogootSAdd) alg1.insert(0, "yoyo");
+        LogootSAdd m1 = (LogootSAdd) alg3.insert(0, "toto");
+        LogootSAdd m2 = (LogootSAdd) alg3.insert(4, "hihi");
         List base = new LinkedList(m1.id.base);
         base.add(5);
         base.add(5);
         Identifier id = new Identifier(base, 6);
-        LogootSOpAdd m3 = new LogootSOpAdd(id, Arrays.asList('k', 'o', 'k', 'o'));
+        LogootSAdd m3 = new LogootSAdd(id, Arrays.asList('k', 'o', 'k', 'o'));
         alg3.applyRemote(m3);
         alg3.applyRemote(m0);
         assertEquals("yoyototohikokohi", alg3.lookup());
@@ -605,14 +605,14 @@ public class LogootSRopesTest {
 
     @Test
     public void testConflictAppendB2concatB12() throws Exception {
-        LogootSOpAdd m0 = (LogootSOpAdd) alg1.insert(0, "yoyo");
-        LogootSOpAdd m1 = (LogootSOpAdd) alg3.insert(0, "toto");
-        LogootSOpAdd m2 = (LogootSOpAdd) alg3.insert(4, "hihi");
+        LogootSAdd m0 = (LogootSAdd) alg1.insert(0, "yoyo");
+        LogootSAdd m1 = (LogootSAdd) alg3.insert(0, "toto");
+        LogootSAdd m2 = (LogootSAdd) alg3.insert(4, "hihi");
         List base = new LinkedList(m1.id.base);
         base.add(4);
         base.add(5);
         Identifier id = new Identifier(base, 6);
-        LogootSOpAdd m3 = new LogootSOpAdd(id, Arrays.asList('k', 'o', 'k', 'o'));
+        LogootSAdd m3 = new LogootSAdd(id, Arrays.asList('k', 'o', 'k', 'o'));
         alg3.applyRemote(m3);
         alg3.applyRemote(m0);
         assertEquals("yoyototohkokoihi", alg3.lookup());

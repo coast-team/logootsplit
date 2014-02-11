@@ -39,7 +39,7 @@ public class TextInsert implements TextOperation {
     }
 
     @Override
-    public LogootSOp applyTo(LogootSDoc<Character> doc) {
+    public LogootSOperation applyTo(LogootSDoc<Character> doc) {
         return doc.insertLocal(offset, content);
 
     }

@@ -18,26 +18,12 @@
  */
 package fr.loria.score.logootsplito;
 
-public class TextDelete implements TextOperation {
+import java.io.Serializable;
+import java.util.List;
 
-    private int offset;
-    private int length;
+public interface LogootSOperation<T> extends Serializable, Cloneable {
 
-    public TextDelete(int offset, int length) {
-        this.offset = offset;
-        this.length = length;
-    }
+    public LogootSOperation<T> clone() throws CloneNotSupportedException;
 
-    public int getOffset() {
-        return this.offset;
-    }
-
-    public int getLength() {
-        return this.length;
-    }
-
-    @Override
-    public LogootSOperation applyTo(LogootSDoc<Character> doc) {
-        return doc.delLocal(offset, offset + length - 1);
-    }
+    public List<TextOperation> execute(LogootSDoc<T> doc);
 }

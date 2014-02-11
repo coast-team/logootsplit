@@ -54,8 +54,8 @@ public class SerializationTest {
         IdentifierInterval iidAfter = SerializationUtils.serializeAndDeserialize(iid);
 
         assertThat(iid.base, allOf(not(sameInstance(iidAfter.base)), equalTo(iidAfter.base)));
-        assertThat(iid.begin, equalTo(iidAfter.begin));
-        assertThat(iid.end, equalTo(iidAfter.end));
+        assertEquals(iid.begin, iidAfter.begin);
+        assertEquals(iid.end, iidAfter.end);
     }
 
 
@@ -83,6 +83,15 @@ public class SerializationTest {
         assertThat(iid2, allOf(not(sameInstance(lidAfterSerialization.get(1))), equalTo(lidAfterSerialization.get(1))));
     }
 
+    @Test
+    public void serializeLogootSBlockLight() {
+        IdentifierInterval iid = new IdentifierInterval(Arrays.asList(new Integer[]{1, 2, 3, 4}), new Integer(7), new Integer(9));
+        LogootSBlockLight block = new LogootSBlockLight(iid, 5);
+        LogootSBlockLight blockAfterSerialization = SerializationUtils.serializeAndDeserialize(block);
 
+        assertThat(block.id, allOf(not(sameInstance(blockAfterSerialization.id)), equalTo(blockAfterSerialization.id)));
+        assertEquals(block.mine, blockAfterSerialization.mine);
+        assertEquals(block.nbElement, blockAfterSerialization.nbElement);
+    }
 
 }

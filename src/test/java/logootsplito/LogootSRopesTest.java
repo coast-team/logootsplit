@@ -55,7 +55,11 @@ public class LogootSRopesTest {
         assertEquals(14, root.getSizeNodeAndChildren());
 
         // Apply to other sites
-        alg2.applyRemote(messages.pop());
+        List<TextOperation> lop= alg2.applyRemote(messages.pop());
+        assertEquals(1,lop.size());
+        TextInsert ti= (TextInsert) lop.get(0);
+        assertEquals("Hello", ti.getContent());
+        assertEquals(0, ti.getOffset());
         
         assertEquals("Hello", alg2.lookup());
         LogootSRopes<Character> doc2 = (LogootSRopes<Character>) alg2.getDoc();
@@ -66,7 +70,11 @@ public class LogootSRopesTest {
         assertNull(root.getLeft());
         assertNull(root.getRight());
 
-        alg2.applyRemote(messages.pop());
+        lop = alg2.applyRemote(messages.pop());
+        assertEquals(1,lop.size());
+        ti= (TextInsert) lop.get(0);
+        assertEquals(" world", ti.getContent());
+        assertEquals(5, ti.getOffset());
         
         assertEquals("Hello world", alg2.lookup());
         doc2 = (LogootSRopes<Character>) alg2.getDoc();
@@ -77,7 +85,11 @@ public class LogootSRopesTest {
         assertNull(root.getLeft());
         assertNull(root.getRight());
 
-        alg2.applyRemote(messages.pop());
+        lop = alg2.applyRemote(messages.pop());
+        assertEquals(1,lop.size());
+        ti= (TextInsert) lop.get(0);
+        assertEquals("---", ti.getContent());
+        assertEquals(0, ti.getOffset());
         
         assertEquals("---Hello world", alg2.lookup());
         doc2 = (LogootSRopes<Character>) alg2.getDoc();
@@ -92,9 +104,16 @@ public class LogootSRopesTest {
     @Test
     public void testTest() throws Exception {
         LinkedList<LogootSOp> messages = new LinkedList();
+        List<TextOperation> lop;
+        TextInsert ti;
         messages.add(alg3.insert(0, " world"));
 
-        alg1.applyRemote(messages.get(0));
+        lop = alg1.applyRemote(messages.get(0));
+        assertEquals(1,lop.size());
+        ti= (TextInsert) lop.get(0);
+        assertEquals(" world", ti.getContent());
+        assertEquals(0, ti.getOffset());
+        
         messages.add(alg1.insert(0, "Hello"));
         messages.add(alg1.insert(11, "Every ones ?"));
         
@@ -111,10 +130,17 @@ public class LogootSRopesTest {
     @Test
     public void simpleAddCheck() throws Exception {
         LinkedList<LogootSOp> messages = new LinkedList();
+        List<TextOperation> lop;
+        TextInsert ti;
         messages.add(alg3.insert(0, " world"));
 
-        alg1.applyRemote(messages.get(0));
+        lop = alg1.applyRemote(messages.get(0));
         messages.add(alg1.insert(0, "Hello"));
+        
+        assertEquals(1,lop.size());
+        ti= (TextInsert) lop.get(0);
+        assertEquals(" world", ti.getContent());
+        assertEquals(0, ti.getOffset());
         
         assertEquals("Hello world", alg1.lookup());
         LogootSRopes<Character> doc = (LogootSRopes<Character>) alg1.getDoc();
@@ -145,9 +171,23 @@ public class LogootSRopesTest {
         assertEquals(" world", Utils.convertCharactersListToString(root.str));
         assertEquals("Every ones ?", Utils.convertCharactersListToString(next.str));
         
-        alg2.applyRemote(messages.pollLast());
-        alg2.applyRemote(messages.pollLast());
-        alg2.applyRemote(messages.pollLast());
+        lop = alg2.applyRemote(messages.pollLast());
+        assertEquals(1,lop.size());
+        ti= (TextInsert) lop.get(0);
+        assertEquals("Every ones ?", ti.getContent());
+        assertEquals(0, ti.getOffset());
+        
+        lop = alg2.applyRemote(messages.pollLast());
+        assertEquals(1,lop.size());
+        ti= (TextInsert) lop.get(0);
+        assertEquals("Hello", ti.getContent());
+        assertEquals(0, ti.getOffset());
+        
+        lop = alg2.applyRemote(messages.pollLast());
+        assertEquals(1,lop.size());
+        ti= (TextInsert) lop.get(0);
+        assertEquals(" world", ti.getContent());
+        assertEquals(5, ti.getOffset());
         
         root = ((LogootSRopes<Character>) alg2.getDoc()).root;
         next = root.getRight();
@@ -165,33 +205,70 @@ public class LogootSRopesTest {
 
     @Test
     public void addDel() throws Exception {
+        
+        List<TextOperation> lop;
+        TextInsert ti;
+        TextDelete td;
+        
         LogootSOp p = alg3.insert(0, "abcd");
-        alg2.applyRemote(p);
-        alg1.applyRemote(p);
+        
+        lop = alg2.applyRemote(p);
+        assertEquals(1,lop.size());
+        ti= (TextInsert) lop.get(0);
+        assertEquals("abcd", ti.getContent());
+        assertEquals(0, ti.getOffset());
+        
+        lop = alg1.applyRemote(p);
+        assertEquals(1,lop.size());
+        ti= (TextInsert) lop.get(0);
+        assertEquals("abcd", ti.getContent());
+        assertEquals(0, ti.getOffset());
         
         assertEquals("abcd", alg2.lookup());
         
         LogootSOp p2 = alg2.remove(0, 2);
         LogootSOp p3 = alg2.remove(0, 2);
-        alg1.applyRemote(p2);
+        
+        lop = alg1.applyRemote(p2);
+        assertEquals(1,lop.size());
+        td= (TextDelete) lop.get(0);
+        assertEquals(0,td.getOffset());
+        assertEquals(2, td.getLength());
         
         assertEquals("cd", alg1.lookup());
         
-        alg1.applyRemote(p3);
+        lop = alg1.applyRemote(p3);
+        assertEquals(1,lop.size());
+        td= (TextDelete) lop.get(0);
+        assertEquals(0,td.getOffset());
+        assertEquals(2, td.getLength());
         
         assertEquals("", alg1.lookup());
 
-        alg3.applyRemote(p3);
+        lop = alg3.applyRemote(p3);
+         assertEquals(1,lop.size());
+        td= (TextDelete) lop.get(0);
+        assertEquals(2,td.getOffset());
+        assertEquals(2, td.getLength());
         
         assertEquals("ab", alg3.lookup());
         
-        alg3.applyRemote(p2);
+        lop = alg3.applyRemote(p2);
+        assertEquals(1,lop.size());
+        td= (TextDelete) lop.get(0);
+        assertEquals(0,td.getOffset());
+        assertEquals(2, td.getLength());
         
         assertEquals("", alg3.lookup());
     }
 
     @Test
     public void simpleAddDel() throws Exception {
+        
+        List<TextOperation> lop;
+        TextInsert ti;
+        TextDelete td;
+        
         LogootSOp op1 = alg1.insert(0, "Test1234");
         
         assertEquals("Test1234", alg1.lookup());
@@ -209,13 +286,33 @@ public class LogootSRopesTest {
         assertEquals("haha", alg2.lookup());
         assertTrue(scoreChecks(alg1, alg2, alg3));
         
-        alg2.applyRemote(op1);
+        lop = alg2.applyRemote(op1);
+        
+        assertEquals(2,lop.size());
+        ti= (TextInsert) lop.get(0);
+        assertEquals("Test1",ti.getContent());
+        assertEquals(0, ti.getOffset());
+        
+        ti= (TextInsert) lop.get(1);
+        assertEquals("234",ti.getContent());
+        assertEquals(9, ti.getOffset());
         
         assertEquals("Test1haha234", alg2.lookup());
         assertTrue(scoreChecks(alg1, alg2, alg3));
         
-        alg3.applyRemote(op1);
-        alg3.applyRemote(op2);
+        lop = alg3.applyRemote(op1);
+        
+        assertEquals(1,lop.size());
+        ti= (TextInsert) lop.get(0);
+        assertEquals("Test1234",ti.getContent());
+        assertEquals(0, ti.getOffset());
+        
+        lop = alg3.applyRemote(op2);
+        
+        assertEquals(1,lop.size());
+        ti= (TextInsert) lop.get(0);
+        assertEquals("haha",ti.getContent());
+        assertEquals(5, ti.getOffset());
         
         assertEquals("Test1haha234", alg3.lookup());
         assertTrue(scoreChecks(alg1, alg2, alg3));
@@ -225,7 +322,19 @@ public class LogootSRopesTest {
 
         assertEquals("Test34", alg3.lookup());
 
-        alg2.applyRemote(op3);
+        lop = alg2.applyRemote(op3);
+        assertEquals(3,lop.size());
+        td= (TextDelete) lop.get(0);
+        assertEquals(4,td.getOffset());
+        assertEquals(1,td.getLength());
+        
+        td= (TextDelete) lop.get(1);
+        assertEquals(4,td.getOffset());
+        assertEquals(4,td.getLength());
+        
+        td= (TextDelete) lop.get(2);
+        assertEquals(4,td.getOffset());
+        assertEquals(1,td.getLength());
         
         assertEquals("Test34", alg2.lookup());
 
@@ -237,7 +346,16 @@ public class LogootSRopesTest {
         assertEquals("Tesha234", alg1.lookup());
 
         // integration of Del
-        alg1.applyRemote(op3);
+        lop = alg1.applyRemote(op3);
+        assertEquals(2,lop.size());
+        
+        td= (TextDelete) lop.get(0);
+        assertEquals(3,td.getOffset());
+        assertEquals(2,td.getLength());
+        
+        td= (TextDelete) lop.get(1);
+        assertEquals(3,td.getOffset());
+        assertEquals(1,td.getLength());
 
         assertEquals("Tes34", alg1.lookup());
 

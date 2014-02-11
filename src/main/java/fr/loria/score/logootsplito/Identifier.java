@@ -35,7 +35,6 @@ public class Identifier implements Comparable, Iterable, Serializable, Cloneable
 
     /**
      * -1 this< t 0 this=t 1 this > t
-     *
      */
     public Identifier(List<Integer> base) {
         this.base = base;
@@ -82,6 +81,26 @@ public class Identifier implements Comparable, Iterable, Serializable, Cloneable
             return Identifier.compareTo(this.iterator(), ((Identifier) t).iterator());
         }
         throw new UnsupportedOperationException("Not supported yet, identifier is not a " + t.getClass().getName());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Identifier that = (Identifier) o;
+
+        if (base != null ? !base.equals(that.base) : that.base != null) return false;
+        if (last != null ? !last.equals(that.last) : that.last != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = base != null ? base.hashCode() : 0;
+        result = 31 * result + (last != null ? last.hashCode() : 0);
+        return result;
     }
 
     public List<Integer> getBase() {

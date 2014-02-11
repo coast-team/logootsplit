@@ -21,13 +21,11 @@ package fr.loria.score.logootsplito;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;
 
 
@@ -45,16 +43,44 @@ public class SerializationTest {
         Identifier id = new Identifier(Arrays.asList(new Integer[]{1, 2, 3, 4}), new Integer(12));
         Identifier idAfter = SerializationUtils.serializeAndDeserialize(id);
 
+        assertEquals(id, idAfter);
+        assertThat(id.base, allOf(not(sameInstance(idAfter.base)), equalTo(idAfter.base)));
+        assertThat(id.last, allOf(not(sameInstance(idAfter.last)), equalTo(idAfter.last)));
+   }
 
-        //assertThat(3, is(not(4)));
+    @Test
+    public void serializeIdentifierInterval() {
+        IdentifierInterval iid = new IdentifierInterval(Arrays.asList(new Integer[]{1, 2, 3, 4}), new Integer(7), new Integer(9));
+        IdentifierInterval iidAfter = SerializationUtils.serializeAndDeserialize(iid);
 
-        assertThat(id.base, not(sameInstance(idAfter.base)));
-        assertThat(id.base, equalTo(idAfter.base));
+        assertThat(iid.base, allOf(not(sameInstance(iidAfter.base)), equalTo(iidAfter.base)));
+        assertThat(iid.begin, equalTo(iidAfter.begin));
+        assertThat(iid.end, equalTo(iidAfter.end));
+    }
 
-        //assertNotSame(id.base, idAfter.base);
-        //assertEquals(id.base, idAfter.base);
-        //assertNotSame(id.last, idAfter.last);
-        //assertEquals(id.last, idAfter.last);
+
+    @Test
+    public void serializeLogootSOpAdd() {
+        Identifier id = new Identifier(Arrays.asList(new Integer[]{1, 2, 3, 4}), new Integer(12));
+        List<Character> atom = Arrays.asList('a', 'b', 'c');
+        LogootSOpAdd add = new LogootSOpAdd(id, atom);
+        LogootSOpAdd addAfterSerialization = SerializationUtils.serializeAndDeserialize(add);
+
+        assertThat(add.id, allOf(not(sameInstance(addAfterSerialization.id)), equalTo(addAfterSerialization.id)));
+        assertThat(add.l, allOf(not(sameInstance(addAfterSerialization.l)), equalTo(addAfterSerialization.l)));
+    }
+
+    @Test
+    public void serializeLogootSOpDel() {
+        IdentifierInterval iid = new IdentifierInterval(Arrays.asList(new Integer[]{1, 2, 3, 4}), new Integer(7), new Integer(9));
+        IdentifierInterval iid2 = new IdentifierInterval(Arrays.asList(new Integer[]{5, 6, 7, 8}), new Integer(13), new Integer(17));
+        List<IdentifierInterval> lid = Arrays.asList(iid, iid2);
+        LogootSOpDel del = new LogootSOpDel(lid);
+        LogootSOpDel delAfterSerialization = SerializationUtils.serializeAndDeserialize(del);
+
+        List<IdentifierInterval> lidAfterSerialization = delAfterSerialization.getLid();
+        assertThat(iid, allOf(not(sameInstance(lidAfterSerialization.get(0))), equalTo(lidAfterSerialization.get(0))));
+        assertThat(iid2, allOf(not(sameInstance(lidAfterSerialization.get(1))), equalTo(lidAfterSerialization.get(1))));
     }
 
 

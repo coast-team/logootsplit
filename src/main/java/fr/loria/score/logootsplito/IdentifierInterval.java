@@ -91,8 +91,30 @@ public class IdentifierInterval implements Serializable, Cloneable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        IdentifierInterval that = (IdentifierInterval) o;
+
+        if (begin != that.begin) return false;
+        if (end != that.end) return false;
+        if (base != null ? !base.equals(that.base) : that.base != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = base != null ? base.hashCode() : 0;
+        result = 31 * result + begin;
+        result = 31 * result + end;
+        return result;
+    }
+
+    @Override
     public String toString() {
-        return "IdentifiantInterval{" + base + ",[" + begin + ".." + end + "]}";
+        return "IdentifierInterval{" + base + ",[" + begin + ".." + end + "]}";
     }
 
 }

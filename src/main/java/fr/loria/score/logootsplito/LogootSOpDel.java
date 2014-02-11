@@ -34,6 +34,10 @@ public class LogootSOpDel<T> implements LogootSOp<T> {
         this.lid = lid;
     }
 
+    public List<IdentifierInterval> getLid() {
+        return this.lid;
+    }
+
     @Override
     public LogootSOpDel<T> clone() throws CloneNotSupportedException {
         LogootSOpDel<T> o = (LogootSOpDel<T>) super.clone();

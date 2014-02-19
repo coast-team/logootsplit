@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Identifier implements Comparable, Iterable, Serializable, Cloneable {
+public class Identifier implements Comparable, Iterable, Serializable {
 
     List<Integer> base;
     Integer last;
@@ -121,8 +121,8 @@ public class Identifier implements Comparable, Iterable, Serializable, Cloneable
         return "Identifier{" + base + "," + last + '}';
     }
 
-    public Identifier clone() throws CloneNotSupportedException {
-        Identifier o = (Identifier) super.clone();
+    public Identifier copy() {
+        Identifier o = new Identifier();
         o.base = new LinkedList(base);
         o.last = last;  // useless?
         return o;

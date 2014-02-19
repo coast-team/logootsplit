@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class IdentifierInterval implements Serializable, Cloneable {
+public class IdentifierInterval implements Serializable {
 
     List<Integer> base;
     int begin;
@@ -38,13 +38,6 @@ public class IdentifierInterval implements Serializable, Cloneable {
         this.end = end;
     }
 
-    @Override
-    public IdentifierInterval clone() throws CloneNotSupportedException {
-        IdentifierInterval o = (IdentifierInterval) super.clone();
-        o.base = new LinkedList<Integer>(base);
-        return o;
-    }
-    
    public IdentifierInterval copy() {
         IdentifierInterval o = new IdentifierInterval();
         o.begin=this.begin;

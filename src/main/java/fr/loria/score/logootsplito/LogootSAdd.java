@@ -33,13 +33,12 @@ public class LogootSAdd<T> implements LogootSOperation<T> {
         this.l = l;
     }
 
-    @Override
-    public LogootSAdd<T> clone() throws CloneNotSupportedException {
-        LogootSAdd<T> o = (LogootSAdd<T>) super.clone();
-        o.id = id.clone();
+    public LogootSAdd<T> copy() {
+        LogootSAdd<T> o = new LogootSAdd<T>();
+        o.id = id.copy();
         o.l = new LinkedList<T>(l);
         return o;
-    }
+	}
 
     @Override
     public List<TextOperation> execute(LogootSDoc<T> doc) {

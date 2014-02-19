@@ -23,7 +23,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
+public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
 
     int replicaNumber = 0;
     int clock = 0;
@@ -130,7 +130,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
                     break;
                 case B1concatB2: //node to insert concat the node
                     if (from.getLeft() != null) {
-                        path2 = (LinkedList) path.clone();
+                    	path2 = new LinkedList<RopesNodes>(path);
                         path2.add(from.getLeft());
                         getXest(RopesNodes.RIGHT, path2);
 
@@ -163,7 +163,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
                     break;
                 case B2ConcatB1://concat at end
                     if (from.getRight() != null) {
-                        path2 = (LinkedList) path.clone();
+                    	path2 = new LinkedList<RopesNodes>(path);
                         path2.add(from.getRight());
                         getXest(RopesNodes.LEFT, path2);
 
@@ -360,10 +360,9 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
      * @param string the value of string
      */
     void ascendentUpdate(LinkedList<RopesNodes> path, int string) {
-        Iterator<RopesNodes> it = path.descendingIterator();
-        while (it.hasNext()) {
-            it.next().addString(string);
-        }
+    	for(int i = path.size()-1; i >= 0; i--) {
+    		path.get(i).addString(string);
+    	}
     }
 
     @Override
@@ -585,31 +584,12 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
 
     @Override
     public LogootSDoc<T> duplicate(int newReplicaNumber) {
-        try {
-            LogootSRopes<T> copy = this.clone();
+            LogootSRopes<T> copy = this.copy();
             copy.setReplicaNumber(newReplicaNumber);
             copy.clock = 0;
             return copy;
-        } catch (CloneNotSupportedException ex) {
-            Logger.getLogger(LogootSRopes.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException(ex);
-        }
     }
 
-    @Override
-    public LogootSRopes<T> clone() throws CloneNotSupportedException {
-        LogootSRopes<T> o = (LogootSRopes<T>) super.clone();
-        o.root = root.clone();
-        o.mapBaseToBlock = new HashMap<List<Integer>, LogootSBlock>();
-        for (Map.Entry<List<Integer>, LogootSBlock> e : this.mapBaseToBlock.entrySet()) {
-            List<Integer> key = new LinkedList<Integer>(e.getKey()); // 
-            LogootSBlock value = e.getValue().clone();
-            o.mapBaseToBlock.put(key, value);
-        }
-
-        return o;
-    }
-    
     public LogootSRopes<T> copy(){
         LogootSRopes<T> o = new LogootSRopes<T>();
         o.clock=0;//not a copy, copy() is used to creat a new CRDT with its own clock and replica number.
@@ -667,7 +647,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
         return ret;
     }
 
-    public static class RopesNodes<T> implements Serializable, Cloneable {
+    public static class RopesNodes<T> implements Serializable {
         public static final int LEFT = 0;
         public static final int RIGHT = 1;
         int offset;
@@ -703,16 +683,6 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
             return this.block.id.getBaseId(offset + str.size() - 1);
         }
 
-        @Override
-        public RopesNodes<T> clone() throws CloneNotSupportedException {
-            RopesNodes<T> o = (RopesNodes<T>) super.clone();
-            o.str = new ArrayList<T>(str); // do not need to clone value since they are atoms (which are never modified)
-            o.childrenLeftRight[LEFT] = this.childrenLeftRight[LEFT].clone();
-            o.childrenLeftRight[RIGHT] = this.childrenLeftRight[RIGHT].clone();
-
-            return o;
-        }
-        
         public RopesNodes<T> copy(){
             RopesNodes<T> o=new RopesNodes<T>();
             o.str = new ArrayList<T>(str); // do not need to clone value since they are atoms (which are never modified)

@@ -38,13 +38,12 @@ public class LogootSDel<T> implements LogootSOperation<T> {
         return this.lid;
     }
 
-    @Override
-    public LogootSDel<T> clone() throws CloneNotSupportedException {
-        LogootSDel<T> o = (LogootSDel<T>) super.clone();
+    public LogootSDel<T> copy() {
+        LogootSDel<T> o = new LogootSDel<T>();
         o.lid = new LinkedList();
 
         for (IdentifierInterval id : this.lid) {
-            o.lid.add(id.clone());
+            o.lid.add(id.copy());
         }
         return o;
     }

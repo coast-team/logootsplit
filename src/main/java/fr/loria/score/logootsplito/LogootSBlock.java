@@ -21,7 +21,7 @@ package fr.loria.score.logootsplito;
 import java.io.Serializable;
 import java.util.List;
 
-public class LogootSBlock<T> implements Serializable, Cloneable {
+public class LogootSBlock<T> implements Serializable {
 
     int nbElement = 0;
     IdentifierInterval id;
@@ -67,14 +67,6 @@ public class LogootSBlock<T> implements Serializable, Cloneable {
         this.nbElement -= nbElement;
     }
 
-    @Override
-    public LogootSBlock<T> clone() throws CloneNotSupportedException {
-        LogootSBlock<T> o = (LogootSBlock<T>) super.clone();
-        o.id = this.id.clone();
-
-        return o;
-    }
-    
      public LogootSBlock<T> copy(){
         LogootSBlock<T> o = new LogootSBlock<T>();
         o.nbElement=this.nbElement;

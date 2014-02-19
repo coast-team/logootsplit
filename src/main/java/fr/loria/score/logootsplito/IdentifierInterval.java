@@ -45,6 +45,14 @@ public class IdentifierInterval implements Serializable, Cloneable {
         return o;
     }
     
+   public IdentifierInterval copy() {
+        IdentifierInterval o = new IdentifierInterval();
+        o.begin=this.begin;
+        o.end=this.end;
+        o.base = new LinkedList<Integer>(base);
+        return o;
+    }
+    
     
     public List<Integer> getBase() {
         return base;

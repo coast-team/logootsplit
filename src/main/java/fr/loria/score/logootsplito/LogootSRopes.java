@@ -609,6 +609,20 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
 
         return o;
     }
+    
+    public LogootSRopes<T> copy(){
+        LogootSRopes<T> o = new LogootSRopes<T>();
+        o.clock=0;//not a copy, copy() is used to creat a new CRDT with its own clock and replica number.
+        o.root = root.copy();
+        o.mapBaseToBlock = new HashMap<List<Integer>, LogootSBlock>();
+        for (Map.Entry<List<Integer>, LogootSBlock> e : this.mapBaseToBlock.entrySet()) {
+            List<Integer> key = new LinkedList<Integer>(e.getKey()); // 
+            LogootSBlock value = e.getValue().copy();
+            o.mapBaseToBlock.put(key, value);
+        }
+
+        return o;        
+    }
 
     @Override
     public void setReplicaNumber(int i) {
@@ -697,6 +711,19 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable, Cloneable {
             o.childrenLeftRight[RIGHT] = this.childrenLeftRight[RIGHT].clone();
 
             return o;
+        }
+        
+        public RopesNodes<T> copy(){
+            RopesNodes<T> o=new RopesNodes<T>();
+            o.str = new ArrayList<T>(str); // do not need to clone value since they are atoms (which are never modified)
+            o.offset=this.offset;
+            o.height=this.height;
+            o.sizeNodeAndChildren=this.sizeNodeAndChildren;
+            o.block=this.block.copy();
+            o.childrenLeftRight[LEFT] = this.childrenLeftRight[LEFT].copy();
+            o.childrenLeftRight[RIGHT] = this.childrenLeftRight[RIGHT].copy();
+
+            return o;          
         }
 
         public void addString(int string) {

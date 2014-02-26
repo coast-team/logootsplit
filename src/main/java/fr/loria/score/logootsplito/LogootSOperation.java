@@ -21,9 +21,9 @@ package fr.loria.score.logootsplito;
 import java.io.Serializable;
 import java.util.List;
 
-public interface LogootSOperation<T> extends Serializable, Cloneable {
+public interface LogootSOperation<T> extends Serializable {
 
-    public LogootSOperation<T> clone() throws CloneNotSupportedException;
+    public LogootSOperation<T> copy();
 
     public List<TextOperation> execute(LogootSDoc<T> doc);
 }

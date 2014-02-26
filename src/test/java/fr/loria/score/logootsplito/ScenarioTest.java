@@ -52,6 +52,26 @@ public class ScenarioTest {
     }
 
     @Test
+    public void scenarioNewClientIsJoining() {
+        LogootSDoc<Character> logootServerDoc = LogootSFactory.create(12);
+        TextOperation insert = new TextInsert(0, "Hello World");
+        insert.applyTo(logootServerDoc);
+        insert = new TextInsert(6, "Da");
+        insert.applyTo(logootServerDoc);
+        insert = new TextInsert(13, "!");
+        insert.applyTo(logootServerDoc);
+        assertEquals(logootServerDoc.view(), "Hello DaWorld!");
+
+        LogootSDoc<Character> logootClientADoc = logootServerDoc.duplicate(42);
+        TextOperation delete = new TextDelete(6,2);
+        LogootSOperation<Character> op = delete.applyTo(logootClientADoc);
+        assertEquals(logootClientADoc.view(), "Hello World!");
+
+        op.execute(logootServerDoc);
+        assertEquals(logootClientADoc.view(), "Hello World!");
+    }
+
+    @Test
     public void scenarioBasicDel() {
         LogootSDoc<Character> logootS1 = LogootSFactory.create(12);
         TextOperation insert = new TextInsert(2, "abc");

@@ -40,8 +40,8 @@ public class IdentifierInterval implements Serializable {
 
    public IdentifierInterval copy() {
         IdentifierInterval o = new IdentifierInterval();
-        o.begin=this.begin;
-        o.end=this.end;
+        o.begin = this.begin;
+        o.end = this.end;
         o.base = new LinkedList<Integer>(base);
         return o;
     }

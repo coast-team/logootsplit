@@ -23,7 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class IDFactory {
+    public class IDFactory {
 
     private static Random rnd = new Random();
 

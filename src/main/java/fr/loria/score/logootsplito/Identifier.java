@@ -124,7 +124,7 @@ public class Identifier implements Comparable, Iterable, Serializable {
     public Identifier copy() {
         Identifier o = new Identifier();
         o.base = new LinkedList(base);
-        o.last = last;  // useless?
+        o.last = last;
         return o;
     }
 

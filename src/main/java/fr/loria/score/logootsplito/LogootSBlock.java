@@ -69,8 +69,8 @@ public class LogootSBlock<T> implements Serializable {
 
      public LogootSBlock<T> copy(){
         LogootSBlock<T> o = new LogootSBlock<T>();
-        o.nbElement=this.nbElement;
-        o.mine=false;//copy is used to create a new CRDT, not a true copy.
+        o.nbElement = this.nbElement;
+        o.mine = false; //copy is used to create a new CRDT, not a true copy.
         o.id = this.id.copy();
 
         return o;

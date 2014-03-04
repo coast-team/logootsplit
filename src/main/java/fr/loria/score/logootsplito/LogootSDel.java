@@ -18,12 +18,15 @@
  */
 package fr.loria.score.logootsplito;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class LogootSDel<T> implements LogootSOperation<T> {
+public class LogootSDel<T> implements LogootSOperation<T>, Serializable {
 
+    private static final long serialVersionUID = -8912537844699848883L;
+    
     private List<IdentifierInterval> lid;
 
     public LogootSDel() {

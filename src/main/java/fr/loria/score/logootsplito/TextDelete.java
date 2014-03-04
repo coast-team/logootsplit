@@ -18,11 +18,19 @@
  */
 package fr.loria.score.logootsplito;
 
-public class TextDelete implements TextOperation {
+import java.io.Serializable;
+
+public class TextDelete implements TextOperation, Serializable {
+
+    private static final long serialVersionUID = 6002253764872486505L;
 
     private int offset;
     private int length;
 
+    public TextDelete() 
+    {      
+    }
+    
     public TextDelete(int offset, int length) {
         this.offset = offset;
         this.length = length;

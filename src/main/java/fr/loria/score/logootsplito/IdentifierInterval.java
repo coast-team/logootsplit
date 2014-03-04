@@ -24,6 +24,8 @@ import java.util.List;
 
 public class IdentifierInterval implements Serializable {
 
+    private static final long serialVersionUID = -915306842429379721L;
+    
     List<Integer> base;
     int begin;
     int end;

@@ -25,6 +25,8 @@ import java.util.logging.Logger;
 
 public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
 
+    private static final long serialVersionUID = 5787396481247100129L;
+    
     int replicaNumber = 0;
     int clock = 0;
     RopesNodes root = null;
@@ -900,4 +902,8 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
             return node;
         }
     }
+    
+    public int getId() {
+        return replicaNumber;
+    }    
 }

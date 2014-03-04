@@ -25,6 +25,8 @@ import java.util.List;
 
 public class Identifier implements Comparable, Iterable, Serializable {
 
+    private static final long serialVersionUID = 8336720992572933349L;
+    
     List<Integer> base;
     Integer last;
 

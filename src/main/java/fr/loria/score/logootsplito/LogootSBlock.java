@@ -23,6 +23,8 @@ import java.util.List;
 
 public class LogootSBlock<T> implements Serializable {
 
+    private static final long serialVersionUID = -3334039779441626454L;
+    
     int nbElement = 0;
     IdentifierInterval id;
     boolean mine = false;

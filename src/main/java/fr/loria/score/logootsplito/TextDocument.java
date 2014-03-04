@@ -18,7 +18,9 @@
  */
 package fr.loria.score.logootsplito;
 
-public interface TextDocument {
+import java.io.Serializable;
+
+public interface TextDocument extends Serializable {
 
     public void apply(TextOperation op) ;
     

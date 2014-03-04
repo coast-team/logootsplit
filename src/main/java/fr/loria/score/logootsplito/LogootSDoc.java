@@ -18,9 +18,10 @@
  */
 package fr.loria.score.logootsplito;
 
+import java.io.Serializable;
 import java.util.List;
 
-public interface LogootSDoc<T> {
+public interface LogootSDoc<T> extends Serializable {
 
     public LogootSDoc<T> duplicate(int newReplicaNumber);
 
@@ -37,4 +38,6 @@ public interface LogootSDoc<T> {
     public String view();
 
     public int viewLength();
+
+    public int getId();
 }

@@ -18,13 +18,20 @@
  */
 package fr.loria.score.logootsplito;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class TextInsert implements TextOperation {
+public class TextInsert implements TextOperation, Serializable {
 
+    private static final long serialVersionUID = 7489199565010828576L;
+    
     private int offset;
     private List<Character> content;
 
+    public TextInsert() 
+    {        
+    }
+    
     public TextInsert(int offset, String content) {
         this.offset = offset;
         this.content = Utils.convertStringToCharactersList(content);

@@ -174,7 +174,7 @@ public class Identifier implements Comparable, Iterable, Serializable {
         }
 
         if (i2.hasNext()) {
-            return Math.max(i2.next(), min);
+            return Math.max(i2.next()+1, min);
         } else {
             return min;
         }

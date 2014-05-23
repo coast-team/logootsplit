@@ -138,15 +138,14 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
                         getXest(RopesNodes.RIGHT, path2);
 
                         split = from.getIdBegin().minOffsetAfterPrev(path2.getLast().getIdEnd(), idi.getBegin());
-                        List l = new ArrayList(str.subList(split + 1 - idi.getBegin(), str.size()));
+                        List l = new ArrayList(str.subList(split - idi.getBegin(), str.size()));
                         from.appendBegin(l);
-                        i = i + from.getSizeNodeAndChildren(0);
-                        result.add(new TextInsert(i, Utils.convertCharactersListToString(l)));
+                        result.add(new TextInsert(i+ from.getSizeNodeAndChildren(0), Utils.convertCharactersListToString(l)));
 
 
                         ascendentUpdate(path, l.size());
-                        str = new ArrayList(str.subList(0, split + 1 - idi.getBegin()));
-                        idi = new IdentifierInterval(idi.base, idi.begin, split);
+                        str = new ArrayList(str.subList(0, split - idi.getBegin()));
+                        idi = new IdentifierInterval(idi.base, idi.begin, split-1);
 
                         //check if previous is smaller or not
                         if (idi.end >= idi.begin) {

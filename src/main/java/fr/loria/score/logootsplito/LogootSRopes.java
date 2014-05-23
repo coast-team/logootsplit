@@ -101,6 +101,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
                     split = Math.min(from.maxOffset(), ihi.getNextOffset());
                     RopesNodes rp = new RopesNodes(str, idi.getBegin(), getBlock(idi));
                     path.add(from.split(split - from.offset + 1, rp));
+                    i=i+from.getSizeNodeAndChildren(0);
                     result.add(new TextInsert(i+split-from.offset+1, Utils.convertCharactersListToString(str)));
                     con = false;
                     break;
@@ -139,6 +140,7 @@ public class LogootSRopes<T> implements LogootSDoc<T>, Serializable {
                         split = from.getIdBegin().minOffsetAfterPrev(path2.getLast().getIdEnd(), idi.getBegin());
                         List l = new ArrayList(str.subList(split + 1 - idi.getBegin(), str.size()));
                         from.appendBegin(l);
+                        i = i + from.getSizeNodeAndChildren(0);
                         result.add(new TextInsert(i, Utils.convertCharactersListToString(l)));
 
 
